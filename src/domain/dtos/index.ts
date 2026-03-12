@@ -8,3 +8,5 @@ export type {
 } from './BattleDTO';
 
 export type { ApiResponse } from './ApiResponse';
+
+export type { PlayerStatsDTO, RegisterResponseDTO } from './PlayerDTO';
