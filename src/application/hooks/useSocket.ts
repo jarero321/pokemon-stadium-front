@@ -17,7 +17,8 @@ import type {
 export function useSocket(socketClient: ISocketClient) {
   const hasRegisteredRef = useRef(false);
   const baseUrl = useConnectionStore((s) => s.baseUrl);
-  const setConnected = useConnectionStore((s) => s.setConnected);
+  const setStatus = useConnectionStore((s) => s.setStatus);
+  const setError = useConnectionStore((s) => s.setError);
   const setLobby = useLobbyStore((s) => s.setLobby);
   const {
     setBattleStarted,
@@ -30,6 +31,14 @@ export function useSocket(socketClient: ISocketClient) {
   const registerListeners = useCallback(() => {
     if (hasRegisteredRef.current) return;
     hasRegisteredRef.current = true;
+
+    socketClient.on('connect', () => {
+      setStatus('connected');
+    });
+
+    socketClient.on('disconnect', () => {
+      setStatus('idle');
+    });
 
     socketClient.on(ServerEvent.LOBBY_STATUS, (data) => {
       setLobby(data as LobbyDTO);
@@ -55,8 +64,17 @@ export function useSocket(socketClient: ISocketClient) {
     socketClient.on(ServerEvent.BATTLE_END, (data) => {
       setBattleEnd(data as BattleEndDTO);
     });
+
+    socketClient.on(ServerEvent.ERROR, (data) => {
+      const message = typeof data === 'object' && data !== null && 'message' in data
+        ? (data as { message: string }).message
+        : String(data);
+      setError(message);
+    });
   }, [
     socketClient,
+    setStatus,
+    setError,
     setLobby,
     setBattleStarted,
     addTurnResult,
@@ -68,16 +86,16 @@ export function useSocket(socketClient: ISocketClient) {
   useEffect(() => {
     if (!baseUrl) return;
 
+    setStatus('connecting');
     socketClient.connect(baseUrl);
-    setConnected(true);
     registerListeners();
 
     return () => {
       socketClient.disconnect();
-      setConnected(false);
+      setStatus('idle');
       hasRegisteredRef.current = false;
     };
-  }, [baseUrl, socketClient, setConnected, registerListeners]);
+  }, [baseUrl, socketClient, setStatus, registerListeners]);
 
   return socketClient;
 }
