@@ -33,12 +33,13 @@ export function useViewSync() {
       return;
     }
 
-    if (!lobby) {
+    if (lobby?.status === LobbyStatus.FINISHED) {
+      setView('result');
       return;
     }
 
-    if (lobby.status === LobbyStatus.FINISHED) {
-      setView('result');
+    if (!lobby) {
+      setView('lobby');
       return;
     }
 

@@ -6,6 +6,8 @@ import {
   useBattleStore,
   useLobbyStore,
 } from '@/application/stores';
+import { useGame } from '@/presentation/providers/GameProvider';
+import { useLobby } from '@/application/hooks';
 
 const STORAGE_KEY = 'pokemon-stadium-nickname';
 
@@ -16,6 +18,8 @@ export function ResultScreen() {
   const setView = useViewStore((s) => s.setView);
   const resetBattle = useBattleStore((s) => s.reset);
   const resetLobby = useLobbyStore((s) => s.reset);
+  const { socketClient, storage } = useGame();
+  const { join } = useLobby(socketClient);
 
   const isWinner = winner === nickname;
 
@@ -30,16 +34,16 @@ export function ResultScreen() {
   const handlePlayAgain = () => {
     resetBattle();
     resetLobby();
-    setView('lobby');
+    if (nickname) {
+      join(nickname);
+    }
   };
 
   const handleExit = () => {
     resetBattle();
     resetLobby();
     useConnectionStore.getState().reset();
-    if (typeof window !== 'undefined') {
-      localStorage.removeItem(STORAGE_KEY);
-    }
+    storage.remove(STORAGE_KEY);
     setView('nickname');
   };
 
