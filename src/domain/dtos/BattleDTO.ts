@@ -37,6 +37,6 @@ export interface PokemonSwitchDTO {
 export interface BattleEndDTO {
   winner: string;
   loser: string;
-  battleId: string;
+  battleId?: string;
   reason?: string;
 }
