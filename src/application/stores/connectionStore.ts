@@ -26,7 +26,8 @@ export const useConnectionStore = create<ConnectionState>((set) => ({
   ...initialState,
 
   setBaseUrl: (url) => set({ baseUrl: url }),
-  setStatus: (status) => set({ status, error: status === 'error' ? undefined : null }),
+  setStatus: (status) =>
+    set({ status, error: status === 'error' ? undefined : null }),
   setError: (error) => set({ error, status: 'error' }),
   setNickname: (nickname) => set({ nickname }),
   reset: () => set(initialState),

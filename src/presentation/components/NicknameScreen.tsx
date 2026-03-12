@@ -69,9 +69,7 @@ export function NicknameScreen() {
             className="w-full rounded-lg border border-white/20 bg-white/10 px-4 py-3 text-white placeholder-white/40 outline-none focus:border-blue-500"
           />
 
-          {error && (
-            <p className="text-sm text-red-400">{error}</p>
-          )}
+          {error && <p className="text-sm text-red-400">{error}</p>}
 
           <button
             type="submit"

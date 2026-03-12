@@ -1,6 +1,11 @@
 'use client';
 
-import { useConnectionStore, useViewStore, useBattleStore, useLobbyStore } from '@/application/stores';
+import {
+  useConnectionStore,
+  useViewStore,
+  useBattleStore,
+  useLobbyStore,
+} from '@/application/stores';
 
 const STORAGE_KEY = 'pokemon-stadium-nickname';
 

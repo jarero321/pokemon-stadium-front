@@ -1,8 +1,4 @@
-export type {
-  LobbyDTO,
-  PlayerDTO,
-  PokemonStateDTO,
-} from './LobbyDTO';
+export type { LobbyDTO, PlayerDTO, PokemonStateDTO } from './LobbyDTO';
 
 export type {
   TurnResultDTO,

@@ -66,9 +66,10 @@ export function useSocket(socketClient: ISocketClient) {
     });
 
     socketClient.on(ServerEvent.ERROR, (data) => {
-      const message = typeof data === 'object' && data !== null && 'message' in data
-        ? (data as { message: string }).message
-        : String(data);
+      const message =
+        typeof data === 'object' && data !== null && 'message' in data
+          ? (data as { message: string }).message
+          : String(data);
       setError(message);
     });
   }, [

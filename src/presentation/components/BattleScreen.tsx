@@ -45,12 +45,16 @@ export function BattleScreen() {
         {/* My pokemon */}
         <div className="rounded-lg border border-blue-500/30 bg-blue-500/10 p-4">
           <p className="text-sm text-blue-400">{myPlayer?.nickname}</p>
-          <p className="text-lg font-bold">{myActive?.name ?? 'All fainted!'}</p>
+          <p className="text-lg font-bold">
+            {myActive?.name ?? 'All fainted!'}
+          </p>
           {myActive && (
             <div className="mt-2">
               <div className="mb-1 flex justify-between text-xs text-white/50">
                 <span>HP</span>
-                <span>{myActive.hp}/{myActive.maxHp}</span>
+                <span>
+                  {myActive.hp}/{myActive.maxHp}
+                </span>
               </div>
               <div className="h-2 overflow-hidden rounded-full bg-white/10">
                 <div
@@ -65,17 +69,23 @@ export function BattleScreen() {
         {/* Opponent pokemon */}
         <div className="rounded-lg border border-red-500/30 bg-red-500/10 p-4">
           <p className="text-sm text-red-400">{opponent?.nickname}</p>
-          <p className="text-lg font-bold">{opponentActive?.name ?? 'All fainted!'}</p>
+          <p className="text-lg font-bold">
+            {opponentActive?.name ?? 'All fainted!'}
+          </p>
           {opponentActive && (
             <div className="mt-2">
               <div className="mb-1 flex justify-between text-xs text-white/50">
                 <span>HP</span>
-                <span>{opponentActive.hp}/{opponentActive.maxHp}</span>
+                <span>
+                  {opponentActive.hp}/{opponentActive.maxHp}
+                </span>
               </div>
               <div className="h-2 overflow-hidden rounded-full bg-white/10">
                 <div
                   className="h-full bg-green-500 transition-all"
-                  style={{ width: `${(opponentActive.hp / opponentActive.maxHp) * 100}%` }}
+                  style={{
+                    width: `${(opponentActive.hp / opponentActive.maxHp) * 100}%`,
+                  }}
                 />
               </div>
             </div>
@@ -121,8 +131,9 @@ export function BattleScreen() {
             <div key={i}>
               {evt.type === 'turn_result' && (
                 <span>
-                  {evt.data.attacker.nickname}&apos;s {evt.data.attacker.pokemon} dealt{' '}
-                  {evt.data.damage} damage to {evt.data.defender.pokemon}
+                  {evt.data.attacker.nickname}&apos;s{' '}
+                  {evt.data.attacker.pokemon} dealt {evt.data.damage} damage to{' '}
+                  {evt.data.defender.pokemon}
                   {evt.data.typeMultiplier > 1 ? ' (super effective!)' : ''}
                 </span>
               )}
@@ -144,7 +155,8 @@ export function BattleScreen() {
       {/* Last turn info */}
       {lastTurn && (
         <div className="text-xs text-white/40">
-          Turn {lastTurn.turnNumber} — {lastTurn.damage} dmg (x{lastTurn.typeMultiplier})
+          Turn {lastTurn.turnNumber} — {lastTurn.damage} dmg (x
+          {lastTurn.typeMultiplier})
         </div>
       )}
     </div>
