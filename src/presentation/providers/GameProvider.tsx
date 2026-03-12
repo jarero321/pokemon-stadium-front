@@ -5,7 +5,7 @@ import { SocketIOClient } from '@/infrastructure/socket/SocketIOClient';
 import { FetchHttpClient } from '@/infrastructure/http/FetchHttpClient';
 import { LocalStorageClient } from '@/infrastructure/storage/LocalStorageClient';
 import { useConnectionStore } from '@/application/stores';
-import { useSocket, useViewSync } from '@/application/hooks';
+import { useSocket, useViewSync, useNotifications } from '@/application/hooks';
 import type { ISocketClient } from '@/application/ports';
 import type { IHttpClient } from '@/application/ports';
 import type { IStorage } from '@/application/ports';
@@ -56,6 +56,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
 
   useSocket(socketClient);
   useViewSync();
+  useNotifications();
 
   const value = useMemo(
     () => ({ socketClient, httpClient, storage }),
