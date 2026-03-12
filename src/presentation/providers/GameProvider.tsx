@@ -1,11 +1,11 @@
 'use client';
 
-import { createContext, useContext, useRef, useEffect } from 'react';
+import { createContext, useContext, useEffect, useMemo } from 'react';
 import { SocketIOClient } from '@/infrastructure/socket/SocketIOClient';
 import { FetchHttpClient } from '@/infrastructure/http/FetchHttpClient';
 import { LocalStorageClient } from '@/infrastructure/storage/LocalStorageClient';
-import { useConnectionStore, useViewStore } from '@/application/stores';
-import { useSocket } from '@/application/hooks';
+import { useConnectionStore } from '@/application/stores';
+import { useSocket, useViewSync } from '@/application/hooks';
 import type { ISocketClient } from '@/application/ports';
 import type { IHttpClient } from '@/application/ports';
 import type { IStorage } from '@/application/ports';
@@ -32,44 +32,35 @@ export function useGame() {
 }
 
 export function GameProvider({ children }: { children: React.ReactNode }) {
-  const socketClientRef = useRef(new SocketIOClient());
-  const storageRef = useRef(new LocalStorageClient());
+  const storage = useMemo(() => new LocalStorageClient(), []);
+  const socketClient = useMemo(() => new SocketIOClient(), []);
 
   const setBaseUrl = useConnectionStore((s) => s.setBaseUrl);
   const setNickname = useConnectionStore((s) => s.setNickname);
-  const setView = useViewStore((s) => s.setView);
 
-  const httpClientRef = useRef<FetchHttpClient | null>(null);
+  const baseUrl = useMemo(() => {
+    if (typeof window === 'undefined') return DEFAULT_BASE_URL;
+    return storage.get(STORAGE_KEYS.BASE_URL) ?? DEFAULT_BASE_URL;
+  }, [storage]);
+
+  const httpClient = useMemo(() => new FetchHttpClient(baseUrl), [baseUrl]);
 
   useEffect(() => {
-    const storage = storageRef.current;
-    const savedUrl = storage.get(STORAGE_KEYS.BASE_URL) ?? DEFAULT_BASE_URL;
+    setBaseUrl(baseUrl);
+
     const savedNickname = storage.get(STORAGE_KEYS.NICKNAME);
-
-    httpClientRef.current = new FetchHttpClient(savedUrl);
-    setBaseUrl(savedUrl);
-
     if (savedNickname) {
       setNickname(savedNickname);
-      setView('lobby');
     }
-  }, [setBaseUrl, setNickname, setView]);
+  }, [baseUrl, storage, setBaseUrl, setNickname]);
 
-  useSocket(socketClientRef.current);
+  useSocket(socketClient);
+  useViewSync();
 
-  if (!httpClientRef.current) {
-    httpClientRef.current = new FetchHttpClient(DEFAULT_BASE_URL);
-  }
-
-  return (
-    <GameContext.Provider
-      value={{
-        socketClient: socketClientRef.current,
-        httpClient: httpClientRef.current,
-        storage: storageRef.current,
-      }}
-    >
-      {children}
-    </GameContext.Provider>
+  const value = useMemo(
+    () => ({ socketClient, httpClient, storage }),
+    [socketClient, httpClient, storage],
   );
+
+  return <GameContext.Provider value={value}>{children}</GameContext.Provider>;
 }
