@@ -4,8 +4,9 @@ import { createContext, useContext, useEffect, useMemo } from 'react';
 import { SocketIOClient } from '@/infrastructure/socket/SocketIOClient';
 import { FetchHttpClient } from '@/infrastructure/http/FetchHttpClient';
 import { LocalStorageClient } from '@/infrastructure/storage/LocalStorageClient';
-import { useConnectionStore } from '@/application/stores';
+import { useConnectionStore, useLobbyStore } from '@/application/stores';
 import { useSocket, useViewSync, useNotifications } from '@/application/hooks';
+import { ClientEvent } from '@/domain/events';
 import type { ISocketClient } from '@/application/ports';
 import type { IHttpClient } from '@/application/ports';
 import type { IStorage } from '@/application/ports';
@@ -53,6 +54,19 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
       setNickname(savedNickname);
     }
   }, [baseUrl, storage, setBaseUrl, setNickname]);
+
+  const status = useConnectionStore((s) => s.status);
+  const nickname = useConnectionStore((s) => s.nickname);
+  const lobby = useLobbyStore((s) => s.lobby);
+  const setMyNickname = useLobbyStore((s) => s.setMyNickname);
+
+  // Auto-rejoin lobby when reconnecting with a saved nickname
+  useEffect(() => {
+    if (status === 'connected' && nickname && !lobby) {
+      setMyNickname(nickname);
+      socketClient.emit(ClientEvent.JOIN_LOBBY, { nickname });
+    }
+  }, [status, nickname, lobby, socketClient, setMyNickname]);
 
   useSocket(socketClient);
   useViewSync();
