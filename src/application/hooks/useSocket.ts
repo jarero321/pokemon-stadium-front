@@ -54,7 +54,8 @@ export function useSocket(socketClient: ISocketClient) {
     });
 
     socketClient.on(ServerEvent.POKEMON_DEFEATED, (data) => {
-      addPokemonDefeated(data as PokemonDefeatedDTO);
+      const myNick = useLobbyStore.getState().myNickname;
+      addPokemonDefeated(data as PokemonDefeatedDTO, myNick);
     });
 
     socketClient.on(ServerEvent.POKEMON_SWITCH, (data) => {

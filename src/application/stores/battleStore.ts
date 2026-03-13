@@ -18,12 +18,17 @@ interface BattleState {
   winner: string | null;
   events: BattleEvent[];
   lastTurn: TurnResultDTO | null;
+  forcedSwitchPending: boolean;
 
   setBattleStarted: () => void;
   addTurnResult: (turn: TurnResultDTO) => void;
-  addPokemonDefeated: (data: PokemonDefeatedDTO) => void;
+  addPokemonDefeated: (
+    data: PokemonDefeatedDTO,
+    myNickname: string | null,
+  ) => void;
   addPokemonSwitch: (data: PokemonSwitchDTO) => void;
   setBattleEnd: (data: BattleEndDTO) => void;
+  setForcedSwitchPending: (pending: boolean) => void;
 
   reset: () => void;
 }
@@ -34,6 +39,7 @@ const initialState = {
   winner: null,
   events: [] as BattleEvent[],
   lastTurn: null,
+  forcedSwitchPending: false,
 };
 
 export const useBattleStore = create<BattleState>((set) => ({
@@ -47,9 +53,10 @@ export const useBattleStore = create<BattleState>((set) => ({
       events: [...state.events, { type: 'turn_result', data: turn }],
     })),
 
-  addPokemonDefeated: (data) =>
+  addPokemonDefeated: (data, myNickname) =>
     set((state) => ({
       events: [...state.events, { type: 'pokemon_defeated', data }],
+      forcedSwitchPending: data.owner === myNickname && data.remainingTeam > 0,
     })),
 
   addPokemonSwitch: (data) =>
@@ -61,8 +68,11 @@ export const useBattleStore = create<BattleState>((set) => ({
     set((state) => ({
       finished: true,
       winner: data.winner,
+      forcedSwitchPending: false,
       events: [...state.events, { type: 'battle_end', data }],
     })),
+
+  setForcedSwitchPending: (pending) => set({ forcedSwitchPending: pending }),
 
   reset: () => set(initialState),
 }));

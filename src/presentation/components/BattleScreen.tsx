@@ -1,11 +1,15 @@
 'use client';
 
-import { useConnectionStore } from '@/application/stores';
+import { useConnectionStore, useBattleStore } from '@/application/stores';
 import { useGame } from '@/presentation/providers/GameProvider';
 import { useBattle } from '@/application/hooks';
 
 export function BattleScreen() {
   const status = useConnectionStore((s) => s.status);
+  const forcedSwitchPending = useBattleStore((s) => s.forcedSwitchPending);
+  const setForcedSwitchPending = useBattleStore(
+    (s) => s.setForcedSwitchPending,
+  );
   const { socketClient } = useGame();
   const {
     myPlayer,
@@ -19,6 +23,13 @@ export function BattleScreen() {
 
   const myActive = myPlayer?.team?.[myPlayer.activePokemonIndex] ?? null;
   const opponentActive = opponent?.team?.[opponent.activePokemonIndex] ?? null;
+
+  const handleForcedSwitch = (index: number) => {
+    if (index !== myPlayer?.activePokemonIndex) {
+      switchPokemon(index);
+    }
+    setForcedSwitchPending(false);
+  };
 
   const myAliveCount = myPlayer?.team?.filter((p) => !p.defeated).length ?? 0;
   const opponentAliveCount =
@@ -286,6 +297,62 @@ export function BattleScreen() {
         <div className="text-xs text-white/40">
           Turn {lastTurn.turnNumber} — {lastTurn.damage} dmg (x
           {lastTurn.typeMultiplier})
+        </div>
+      )}
+
+      {/* Forced switch modal */}
+      {forcedSwitchPending && myPlayer?.team && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70">
+          <div className="w-full max-w-sm rounded-xl border border-red-500/30 bg-gray-900 p-6">
+            <h3 className="mb-1 text-center text-xl font-bold text-red-400">
+              Pokémon Defeated!
+            </h3>
+            <p className="mb-4 text-center text-sm text-white/50">
+              Choose your next Pokémon
+            </p>
+            <div className="space-y-2">
+              {myPlayer.team.map((p, i) => {
+                if (p.defeated) return null;
+                const isAutoSelected = i === myPlayer.activePokemonIndex;
+                return (
+                  <button
+                    key={i}
+                    onClick={() => handleForcedSwitch(i)}
+                    className={`flex w-full items-center gap-3 rounded-lg border p-3 text-left transition ${
+                      isAutoSelected
+                        ? 'border-blue-500/50 bg-blue-500/15 hover:bg-blue-500/25'
+                        : 'border-white/10 bg-white/5 hover:bg-white/10'
+                    }`}
+                  >
+                    {p.sprite && (
+                      <img
+                        src={p.sprite}
+                        alt={p.name}
+                        className="h-10 w-10 pixelated"
+                      />
+                    )}
+                    <div className="flex-1">
+                      <p className="font-semibold">
+                        {p.name}
+                        {isAutoSelected && (
+                          <span className="ml-2 text-xs text-blue-400">
+                            (current)
+                          </span>
+                        )}
+                      </p>
+                      <p className="text-xs text-white/40">
+                        {p.type.join('/')} — {p.hp}/{p.maxHp} HP
+                      </p>
+                    </div>
+                    <div className="text-right text-xs text-white/30">
+                      <p>ATK:{p.attack}</p>
+                      <p>SPD:{p.speed}</p>
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
         </div>
       )}
     </div>
