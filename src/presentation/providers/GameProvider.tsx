@@ -15,7 +15,7 @@ const STORAGE_KEYS = {
   BASE_URL: 'pokemon-stadium-base-url',
 };
 
-const DEFAULT_BASE_URL = 'http://localhost:3001';
+const DEFAULT_BASE_URL = 'http://localhost:8080';
 
 interface GameContextValue {
   socketClient: ISocketClient;
