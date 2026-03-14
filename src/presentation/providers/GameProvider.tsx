@@ -5,7 +5,7 @@ import { SocketIOClient } from '@/infrastructure/socket/SocketIOClient';
 import { FetchHttpClient } from '@/infrastructure/http/FetchHttpClient';
 import { LocalStorageClient } from '@/infrastructure/storage/LocalStorageClient';
 import { useConnectionStore, useLobbyStore } from '@/application/stores';
-import { useSocket, useViewSync, useNotifications } from '@/application/hooks';
+import { useSocket, useNotifications } from '@/application/hooks';
 import { ClientEvent } from '@/domain/events';
 import type { ISocketClient } from '@/application/ports';
 import type { IHttpClient } from '@/application/ports';
@@ -13,6 +13,7 @@ import type { IStorage } from '@/application/ports';
 
 const STORAGE_KEYS = {
   NICKNAME: 'pokemon-stadium-nickname',
+  TOKEN: 'pokemon-stadium-token',
   BASE_URL: 'pokemon-stadium-base-url',
 };
 
@@ -38,6 +39,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
 
   const setBaseUrl = useConnectionStore((s) => s.setBaseUrl);
   const setNickname = useConnectionStore((s) => s.setNickname);
+  const setToken = useConnectionStore((s) => s.setToken);
 
   const baseUrl = useMemo(() => {
     if (typeof window === 'undefined') return DEFAULT_BASE_URL;
@@ -50,10 +52,17 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
     setBaseUrl(baseUrl);
 
     const savedNickname = storage.get(STORAGE_KEYS.NICKNAME);
+    const savedToken = storage.get(STORAGE_KEYS.TOKEN);
+
     if (savedNickname) {
       setNickname(savedNickname);
     }
-  }, [baseUrl, storage, setBaseUrl, setNickname]);
+
+    if (savedToken) {
+      setToken(savedToken);
+      httpClient.setToken(savedToken);
+    }
+  }, [baseUrl, storage, setBaseUrl, setNickname, setToken, httpClient]);
 
   const status = useConnectionStore((s) => s.status);
   const nickname = useConnectionStore((s) => s.nickname);
@@ -64,12 +73,11 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     if (status === 'connected' && nickname && !lobby) {
       setMyNickname(nickname);
-      socketClient.emit(ClientEvent.JOIN_LOBBY, { nickname });
+      socketClient.emit(ClientEvent.JOIN_LOBBY);
     }
   }, [status, nickname, lobby, socketClient, setMyNickname]);
 
   useSocket(socketClient);
-  useViewSync();
   useNotifications();
 
   const value = useMemo(

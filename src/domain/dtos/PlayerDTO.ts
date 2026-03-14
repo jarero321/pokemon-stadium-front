@@ -9,4 +9,5 @@ export interface PlayerStatsDTO {
 export interface RegisterResponseDTO {
   player: PlayerStatsDTO;
   isNewPlayer: boolean;
+  token: string;
 }

@@ -1,0 +1,36 @@
+[10:11:07.616] [INFO] storybook v10.2.17
+[10:11:08.106] [DEBUG] Getting package.json info for /home/carlos/Repos/test-albo/pokemon-stadium-front/package.json...
+[10:11:08.111] [WARN] You are currently using Storybook 10.2.17 but you have packages which are incompatible with it:
+
+- @storybook/addon-essentials@8.6.14 which depends on 8.6.14
+ Repo: https://github.com/storybookjs/storybook/tree/next/code/addons/essentials
+
+Please consider updating your packages or contacting the maintainers for compatibility details.
+
+For more details on compatibility guidance, see:
+https://github.com/storybookjs/storybook/issues/32836
+[10:11:09.256] [DEBUG] Serving static files from node_modules/.pnpm/@chromatic-com+storybook@5.0.1_storybook@10.2.17_@testing-library+dom@10.4.1_prettier@3_d8bf7a4f4acc0aa9dd2a63ac0c922515/node_modules/@chromatic-com/storybook/assets at /addon-visual-tests-assets
+[10:11:09.256] [DEBUG] Serving static files from public at /
+[10:11:09.257] [INFO] Starting...
+[10:11:09.277] [WARN] No story files found for the specified pattern: src/**/*.mdx
+[10:11:09.557] [ERROR] [38;2;241;97;97mSB_CORE-SERVER_0004 (NoMatchingExportError): There was an exports mismatch error when trying to build Storybook.
+Please check whether the versions of your Storybook packages match whenever possible, as this might be the cause.
+
+Problematic example:
+{ "@storybook/react": "7.5.3", "@storybook/react-vite": "7.4.5", "storybook": "7.3.0" }
+
+Correct example:
+{ "@storybook/react": "7.5.3", "@storybook/react-vite": "7.5.3", "storybook": "7.5.3" }
+
+Please run `npx storybook doctor` for guidance on how to fix this issue.
+
+More info: 
+[39m
+    at buildOrThrow (file://./node_modules/.pnpm/storybook@10.2.17_@testing-library+dom@10.4.1_prettier@3.8.1_react-dom@19.2.3_react@19.2.3__react@19.2.3/node_modules/storybook/dist/core-server/index.js:4511:9)
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async buildDevStandalone (file://./node_modules/.pnpm/storybook@10.2.17_@testing-library+dom@10.4.1_prettier@3.8.1_react-dom@19.2.3_react@19.2.3__react@19.2.3/node_modules/storybook/dist/core-server/index.js:7710:41)
+    at async withTelemetry (file://./node_modules/.pnpm/storybook@10.2.17_@testing-library+dom@10.4.1_prettier@3.8.1_react-dom@19.2.3_react@19.2.3__react@19.2.3/node_modules/storybook/dist/_node-chunks/chunk-FTTIUZEI.js:218:12)
+    at async dev (file://./node_modules/.pnpm/storybook@10.2.17_@testing-library+dom@10.4.1_prettier@3.8.1_react-dom@19.2.3_react@19.2.3__react@19.2.3/node_modules/storybook/dist/bin/core.js:2734:3)
+    at async _Command.<anonymous> (file://./node_modules/.pnpm/storybook@10.2.17_@testing-library+dom@10.4.1_prettier@3.8.1_react-dom@19.2.3_react@19.2.3__react@19.2.3/node_modules/storybook/dist/bin/core.js:2804:92)
+[10:11:09.559] [WARN] Broken build, fix the error above.
+You may need to refresh the browser.

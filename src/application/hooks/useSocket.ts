@@ -5,6 +5,8 @@ import { useConnectionStore } from '@/application/stores';
 import { useLobbyStore } from '@/application/stores';
 import { useBattleStore } from '@/application/stores';
 import { ServerEvent } from '@/domain/events';
+import { classifyError, ErrorSeverity } from '@/domain/errors';
+import type { ServerError } from '@/domain/errors';
 import type { ISocketClient } from '@/application/ports';
 import type { LobbyDTO } from '@/domain/dtos';
 import type {
@@ -37,19 +39,29 @@ export function useSocket(socketClient: ISocketClient) {
     });
 
     socketClient.on('disconnect', () => {
-      setStatus('idle');
+      const hasBaseUrl = !!useConnectionStore.getState().baseUrl;
+      setStatus(hasBaseUrl ? 'reconnecting' : 'idle');
+    });
+
+    socketClient.onError((error: Error) => {
+      const current = useConnectionStore.getState().status;
+      if (current === 'reconnecting') return;
+      setError(error.message);
     });
 
     socketClient.on(ServerEvent.LOBBY_STATUS, (data) => {
+      useConnectionStore.getState().clearPendingAction();
       setLobby(data as LobbyDTO);
     });
 
     socketClient.on(ServerEvent.BATTLE_START, (data) => {
+      useConnectionStore.getState().clearPendingAction();
       setLobby(data as LobbyDTO);
       setBattleStarted();
     });
 
     socketClient.on(ServerEvent.TURN_RESULT, (data) => {
+      useConnectionStore.getState().clearPendingAction();
       addTurnResult(data as TurnResultDTO);
     });
 
@@ -59,6 +71,7 @@ export function useSocket(socketClient: ISocketClient) {
     });
 
     socketClient.on(ServerEvent.POKEMON_SWITCH, (data) => {
+      useConnectionStore.getState().clearPendingAction();
       addPokemonSwitch(data as PokemonSwitchDTO);
     });
 
@@ -67,11 +80,15 @@ export function useSocket(socketClient: ISocketClient) {
     });
 
     socketClient.on(ServerEvent.ERROR, (data) => {
-      const message =
-        typeof data === 'object' && data !== null && 'message' in data
-          ? (data as { message: string }).message
-          : String(data);
-      setError(message);
+      const serverError = data as ServerError;
+      const severity = classifyError(serverError.code);
+      useConnectionStore.getState().clearPendingAction();
+
+      if (severity === ErrorSeverity.FATAL) {
+        setError(serverError.message);
+      } else {
+        useConnectionStore.getState().setServerMessage(serverError);
+      }
     });
   }, [
     socketClient,
@@ -85,11 +102,13 @@ export function useSocket(socketClient: ISocketClient) {
     setBattleEnd,
   ]);
 
+  const token = useConnectionStore((s) => s.token);
+
   useEffect(() => {
-    if (!baseUrl) return;
+    if (!baseUrl || !token) return;
 
     setStatus('connecting');
-    socketClient.connect(baseUrl);
+    socketClient.connect(baseUrl, token);
     registerListeners();
 
     return () => {
@@ -97,7 +116,7 @@ export function useSocket(socketClient: ISocketClient) {
       setStatus('idle');
       hasRegisteredRef.current = false;
     };
-  }, [baseUrl, socketClient, setStatus, registerListeners]);
+  }, [baseUrl, token, socketClient, setStatus, registerListeners]);
 
   return socketClient;
 }

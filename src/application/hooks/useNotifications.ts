@@ -2,23 +2,20 @@
 
 import { useEffect, useRef } from 'react';
 import { toast } from 'sonner';
-import {
-  useConnectionStore,
-  useLobbyStore,
-  useBattleStore,
-} from '@/application/stores';
+import { useConnectionStore, useLobbyStore } from '@/application/stores';
+import { classifyError, ErrorSeverity } from '@/domain/errors';
 import type { LobbyDTO } from '@/domain/dtos';
-import type { BattleEvent } from '@/application/stores';
+import { useTranslation } from '@/lib/i18n';
 
 export function useNotifications() {
   const lobby = useLobbyStore((s) => s.lobby);
   const myNickname = useLobbyStore((s) => s.myNickname);
-  const events = useBattleStore((s) => s.events);
   const error = useConnectionStore((s) => s.error);
   const status = useConnectionStore((s) => s.status);
+  const serverMessage = useConnectionStore((s) => s.serverMessage);
+  const { t } = useTranslation();
 
   const prevLobbyRef = useRef<LobbyDTO | null>(null);
-  const prevEventsLenRef = useRef(0);
   const prevStatusRef = useRef(status);
 
   // Connection status changes
@@ -27,12 +24,19 @@ export function useNotifications() {
     prevStatusRef.current = status;
 
     if (prev === 'connecting' && status === 'connected') {
-      toast.success('Connected to server');
+      toast.success(t('notifications.connected'));
     }
     if (prev === 'connected' && status === 'idle') {
-      toast.error('Disconnected from server');
+      toast.error(t('notifications.disconnected'));
     }
-  }, [status]);
+    if (status === 'reconnecting') {
+      toast.loading(t('notifications.reconnecting'), { id: 'reconnect' });
+    }
+    if (prev === 'reconnecting' && status === 'connected') {
+      toast.dismiss('reconnect');
+      toast.success(t('notifications.reconnected'));
+    }
+  }, [status, t]);
 
   // Socket errors
   useEffect(() => {
@@ -40,6 +44,18 @@ export function useNotifications() {
       toast.error(error);
     }
   }, [error]);
+
+  // Classified server messages
+  useEffect(() => {
+    if (!serverMessage) return;
+    const severity = classifyError(serverMessage.code);
+    if (severity === ErrorSeverity.INFORMATIONAL) {
+      toast.info(serverMessage.message, { duration: 3000 });
+    } else {
+      toast.warning(serverMessage.message, { duration: 5000 });
+    }
+    useConnectionStore.getState().setServerMessage(null);
+  }, [serverMessage]);
 
   // Lobby state changes
   useEffect(() => {
@@ -56,7 +72,9 @@ export function useNotifications() {
     if (prevPlayerCount < 2 && currPlayerCount === 2) {
       const opponent = lobby.players.find((p) => p.nickname !== myNickname);
       if (opponent) {
-        toast.success(`${opponent.nickname} joined the lobby!`);
+        toast.success(
+          t('notifications.opponentJoined', { name: opponent.nickname }),
+        );
       }
     }
 
@@ -69,7 +87,9 @@ export function useNotifications() {
       prevOpponent.team.length === 0 &&
       currOpponent.team.length > 0
     ) {
-      toast.info(`${currOpponent.nickname} has a team!`);
+      toast.info(
+        t('notifications.opponentHasTeam', { name: currOpponent.nickname }),
+      );
     }
 
     // Opponent ready
@@ -79,65 +99,9 @@ export function useNotifications() {
       !prevOpponent.ready &&
       currOpponent.ready
     ) {
-      toast.success(`${currOpponent.nickname} is ready!`);
+      toast.success(
+        t('notifications.opponentReady', { name: currOpponent.nickname }),
+      );
     }
-  }, [lobby, myNickname]);
-
-  // Battle events
-  useEffect(() => {
-    const prevLen = prevEventsLenRef.current;
-    const newEvents = events.slice(prevLen);
-    prevEventsLenRef.current = events.length;
-
-    newEvents.forEach((evt: BattleEvent) => {
-      switch (evt.type) {
-        case 'turn_result': {
-          const { attacker, damage, typeMultiplier, defeated } = evt.data;
-          const isMe = attacker.nickname === myNickname;
-
-          if (typeMultiplier > 1) {
-            toast.warning(
-              `Super effective! ${damage} damage${defeated ? ' — KO!' : ''}`,
-            );
-          } else if (typeMultiplier < 1) {
-            toast.info(`Not very effective... ${damage} damage`);
-          } else if (defeated) {
-            toast(isMe ? 'Enemy Pokémon fainted!' : 'Your Pokémon fainted!');
-          }
-          break;
-        }
-        case 'pokemon_defeated': {
-          const isMine = evt.data.owner === myNickname;
-          if (isMine) {
-            toast.error(
-              `${evt.data.pokemon} was defeated! (${evt.data.remainingTeam} left)`,
-            );
-          } else {
-            toast.success(
-              `You defeated ${evt.data.pokemon}! (${evt.data.remainingTeam} left)`,
-            );
-          }
-          break;
-        }
-        case 'pokemon_switch': {
-          const isMine = evt.data.player === myNickname;
-          if (!isMine) {
-            toast.info(`${evt.data.player} sent out ${evt.data.newPokemon}!`);
-          }
-          break;
-        }
-        case 'battle_end': {
-          const isWinner = evt.data.winner === myNickname;
-          if (evt.data.reason === 'opponent_disconnected') {
-            toast.warning('Opponent disconnected — you win!');
-          } else if (isWinner) {
-            toast.success('Victory! You are the champion!');
-          } else {
-            toast.error(`Defeat! ${evt.data.winner} wins.`);
-          }
-          break;
-        }
-      }
-    });
-  }, [events, myNickname]);
+  }, [lobby, myNickname, t]);
 }

@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback } from 'react';
+import { toast } from 'sonner';
 import { useLobbyStore } from '@/application/stores';
 import { useConnectionStore } from '@/application/stores';
 import { ClientEvent } from '@/domain/events';
@@ -15,17 +16,29 @@ export function useLobby(socketClient: ISocketClient) {
 
   const join = useCallback(
     (playerNickname: string) => {
+      if (!socketClient.isConnected()) {
+        toast.error('Not connected');
+        return;
+      }
       setMyNickname(playerNickname);
-      socketClient.emit(ClientEvent.JOIN_LOBBY, { nickname: playerNickname });
+      socketClient.emit(ClientEvent.JOIN_LOBBY);
     },
     [socketClient, setMyNickname],
   );
 
   const assignPokemon = useCallback(() => {
+    if (!socketClient.isConnected()) {
+      toast.error('Not connected');
+      return;
+    }
     socketClient.emit(ClientEvent.ASSIGN_POKEMON);
   }, [socketClient]);
 
   const markReady = useCallback(() => {
+    if (!socketClient.isConnected()) {
+      toast.error('Not connected');
+      return;
+    }
     socketClient.emit(ClientEvent.READY);
   }, [socketClient]);
 
