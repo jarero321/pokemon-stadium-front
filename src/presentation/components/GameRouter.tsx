@@ -1,6 +1,6 @@
 'use client';
 
-import { useViewStore } from '@/application/stores';
+import { useCurrentView } from '@/application/stores';
 import { NicknameScreen } from './NicknameScreen';
 import { LobbyScreen } from './LobbyScreen';
 import { ReadyScreen } from './ReadyScreen';
@@ -16,7 +16,7 @@ const screens: Record<string, React.FC> = {
 };
 
 export function GameRouter() {
-  const currentView = useViewStore((s) => s.currentView);
+  const currentView = useCurrentView();
   const Screen = screens[currentView] ?? NicknameScreen;
   return <Screen />;
 }

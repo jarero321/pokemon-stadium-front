@@ -1,4 +1,539 @@
 @import 'tailwindcss';
+@import './battle-keyframes.css';
 @plugin './hero.ts';
 @source '../../node_modules/@heroui/theme/dist/**/*.{js,ts,jsx,tsx}';
 @custom-variant dark (&:is(.dark *));
+
+/* ── Design Tokens ─────────────────────────────────────── */
+
+@theme {
+  /* Surface system — solid flat panels */
+  --color-glass-bg: #1e293b;
+  --color-glass-bg-light: #283548;
+  --color-glass-border: #334155;
+  --color-glass-border-glow: #475569;
+
+  /* Semantic palette */
+  --color-neon-player: #3b82f6;
+  --color-neon-opponent: #ef4444;
+  --color-neon-safe: #22c55e;
+  --color-neon-warning: #eab308;
+  --color-neon-danger: #ef4444;
+
+  /* Type colors */
+  --color-type-fire: #f97316;
+  --color-type-water: #3b82f6;
+  --color-type-grass: #22c55e;
+  --color-type-electric: #eab308;
+  --color-type-psychic: #d946ef;
+  --color-type-ice: #06b6d4;
+  --color-type-dragon: #6366f1;
+  --color-type-dark: #57534e;
+  --color-type-fairy: #ec4899;
+  --color-type-fighting: #ea580c;
+  --color-type-poison: #a855f7;
+  --color-type-ground: #b45309;
+  --color-type-rock: #78716c;
+  --color-type-bug: #65a30d;
+  --color-type-ghost: #7c3aed;
+  --color-type-steel: #64748b;
+  --color-type-normal: #78716c;
+  --color-type-flying: #60a5fa;
+
+  /* Easing curves */
+  --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-snappy: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --ease-attack: cubic-bezier(0.22, 0.68, 0, 1);
+  --ease-ko: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Blur — disabled for flat aesthetic */
+  --blur-glass: 0px;
+
+  /* Timing */
+  --t-instant: 0.05s;
+  --t-micro: 0.1s;
+  --t-fast: 0.15s;
+  --t-normal: 0.2s;
+  --t-slow: 0.3s;
+  --t-sweep: 0.38s;
+  --t-blaze: 0.4s;
+  --t-hp-fill: 0.5s;
+  --t-strike: 0.55s;
+  --t-sprite-hit: 0.5s;
+  --t-bolt: 0.65s;
+  --t-burst: 0.7s;
+  --t-mystic: 0.75s;
+  --t-hp-ghost: 0.8s;
+  --t-fainting: 0.9s;
+  --t-ghost-slide: 1s;
+  --t-shimmer: 2.5s;
+  --t-platform-pulse: 3s;
+}
+
+/* ── Reusable Utilities ────────────────────────────────── */
+
+@utility glass {
+  background: var(--color-glass-bg);
+  border: 1px solid var(--color-glass-border);
+}
+
+@utility glass-panel {
+  background: var(--color-glass-bg);
+  border: 1px solid var(--color-glass-border);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+}
+
+@utility hp-track {
+  position: relative;
+  height: 6px;
+  border-radius: 9999px;
+  background: #374151;
+  overflow: hidden;
+}
+
+@utility battle-text {
+  font-weight: 700;
+  color: #f1f5f9;
+}
+
+@utility screen-heading {
+  font-size: 20px;
+  font-weight: 700;
+  color: #f1f5f9;
+}
+
+@utility display-heading {
+  font-size: 32px;
+  font-weight: 800;
+  color: #f1f5f9;
+}
+
+/* ── Pokeball ───────────────────────────────────────────── */
+
+.pokeball-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pokeball {
+  position: relative;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 3px solid #333;
+  box-shadow: inset 0 -4px 0 rgba(0, 0, 0, 0.2);
+}
+
+.pokeball__top {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 50%;
+  background: linear-gradient(180deg, #cc2222 0%, #991111 100%);
+}
+
+.pokeball__bottom {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 50%;
+  background: linear-gradient(180deg, #e8e8e8 0%, #cccccc 100%);
+}
+
+.pokeball__band {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 6px;
+  background: #333;
+  transform: translateY(-50%);
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pokeball__button {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #f0f0f0;
+  border: 3px solid #333;
+  z-index: 3;
+}
+
+/* ── Pokemon Sprite ─────────────────────────────────────── */
+
+.pokemon-sprite {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+.pokemon-sprite__pokeball {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 5;
+}
+
+.pokemon-sprite__img {
+  position: relative;
+  z-index: 2;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.4));
+}
+
+/* ── Battle Arena ───────────────────────────────────────── */
+
+.battle-arena {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  min-height: 260px;
+  overflow: hidden;
+  border-radius: 12px;
+  border: 2px solid #334155;
+  container-type: inline-size;
+}
+
+@media (min-width: 640px) {
+  .battle-arena {
+    border-radius: 16px;
+  }
+}
+
+.battle-arena__bg {
+  position: absolute;
+  inset: 0;
+  background-color: #111827;
+  z-index: 0;
+  filter: brightness(0.9) saturate(1.1);
+}
+
+.battle-arena__bg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse at center,
+    transparent 40%,
+    rgba(0, 0, 0, 0.4) 100%
+  );
+  pointer-events: none;
+}
+
+.battle-arena__overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.1) 0%,
+    transparent 40%,
+    rgba(0, 0, 0, 0.2) 100%
+  );
+  z-index: 1;
+  pointer-events: none;
+}
+
+.battle-arena__opponent-zone {
+  position: absolute;
+  top: 22px;
+  right: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+  z-index: 2;
+  transform-origin: top right;
+}
+
+.battle-arena__player-zone {
+  position: absolute;
+  bottom: 8px;
+  left: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  z-index: 2;
+  transform-origin: bottom left;
+}
+
+/* Scale zones based on arena container width */
+@container (max-width: 400px) {
+  .battle-arena__opponent-zone {
+    transform: scale(0.55);
+  }
+  .battle-arena__player-zone {
+    transform: scale(0.55);
+  }
+}
+
+@container (min-width: 401px) and (max-width: 550px) {
+  .battle-arena__opponent-zone {
+    transform: scale(0.7);
+  }
+  .battle-arena__player-zone {
+    transform: scale(0.7);
+  }
+}
+
+@container (min-width: 551px) and (max-width: 750px) {
+  .battle-arena__opponent-zone {
+    transform: scale(0.85);
+    top: 28px;
+    right: 16px;
+  }
+  .battle-arena__player-zone {
+    transform: scale(0.85);
+    bottom: 12px;
+    left: 16px;
+  }
+}
+
+@container (min-width: 751px) {
+  .battle-arena__opponent-zone {
+    transform: scale(1);
+    top: 36px;
+    right: 24px;
+    gap: 8px;
+  }
+  .battle-arena__player-zone {
+    transform: scale(1);
+    bottom: 16px;
+    left: 24px;
+    gap: 8px;
+  }
+}
+
+.battle-arena__sprite-stack {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+}
+
+.battle-arena .platform {
+  margin-top: -12px;
+}
+
+/* ── Glass Input ───────────────────────────────────────── */
+
+.glass-input {
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: 8px;
+  background: #111827;
+  border: 1px solid #374151;
+  color: #f1f5f9;
+  font-size: 14px;
+  outline: none;
+  transition: border-color var(--t-normal);
+}
+
+.glass-input::placeholder {
+  color: #6b7280;
+}
+
+.glass-input:focus {
+  border-color: var(--color-neon-player);
+}
+
+/* ── Ghost Button ──────────────────────────────────────── */
+
+.ghost-btn {
+  width: 100%;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 13px;
+  color: #9ca3af;
+  background: transparent;
+  border: 1px solid #374151;
+  cursor: pointer;
+  transition:
+    background var(--t-fast),
+    color var(--t-fast);
+}
+
+.ghost-btn:hover {
+  background: #283548;
+  color: #f1f5f9;
+}
+
+/* ── Battle Btn Variants ───────────────────────────────── */
+
+.battle-btn--primary {
+  background: #3b82f6;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.battle-btn--primary:not(:disabled):hover {
+  background: #2563eb;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.battle-btn--primary:not(:disabled):active {
+  transform: translateY(0);
+  background: #1d4ed8;
+}
+
+.battle-btn--success {
+  background: #22c55e;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.battle-btn--success:not(:disabled):hover {
+  background: #16a34a;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.battle-btn--success:not(:disabled):active {
+  transform: translateY(0);
+  background: #15803d;
+}
+
+/* ── Alert Banner ──────────────────────────────────────── */
+
+.alert-banner {
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 13px;
+  text-align: center;
+  background: color-mix(in srgb, var(--alert-color) 12%, #111827);
+  border: 1px solid color-mix(in srgb, var(--alert-color) 30%, transparent);
+  color: var(--alert-color);
+}
+
+.alert-banner--error {
+  --alert-color: var(--color-neon-danger);
+}
+.alert-banner--warning {
+  --alert-color: var(--color-neon-warning);
+}
+.alert-banner--success {
+  --alert-color: var(--color-neon-safe);
+}
+.alert-banner--info {
+  --alert-color: var(--color-neon-player);
+}
+
+/* ── Player Card ───────────────────────────────────────── */
+
+.player-card {
+  position: relative;
+  padding: 14px 16px;
+  border-radius: 10px;
+  background: var(--color-glass-bg);
+  border: 2px solid var(--player-accent, #374151);
+  border-left-width: 4px;
+}
+
+.player-card::before {
+  display: none;
+}
+
+.player-card--self {
+  --player-accent: var(--color-neon-player);
+}
+.player-card--opponent {
+  --player-accent: var(--color-neon-opponent);
+}
+
+/* ── Connection Dot ────────────────────────────────────── */
+
+.connection-dot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 12px;
+  color: #9ca3af;
+}
+
+.connection-dot__indicator {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--dot-color);
+  transition: background var(--t-normal);
+}
+
+.connection-dot--connected {
+  --dot-color: var(--color-neon-safe);
+}
+.connection-dot--connecting,
+.connection-dot--reconnecting {
+  --dot-color: var(--color-neon-warning);
+}
+.connection-dot--error {
+  --dot-color: var(--color-neon-danger);
+}
+.connection-dot--idle {
+  --dot-color: #6b7280;
+}
+
+.connection-dot--connecting .connection-dot__indicator,
+.connection-dot--reconnecting .connection-dot__indicator {
+  animation: dot-blink 1s step-start infinite;
+}
+
+/* ── Stat Block ────────────────────────────────────────── */
+
+.stat-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.stat-block__value {
+  font-size: 18px;
+  font-weight: 700;
+  color: #f1f5f9;
+  font-variant-numeric: tabular-nums;
+}
+
+.stat-block__label {
+  font-size: 10px;
+  font-weight: 600;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* ── Neon Badge ────────────────────────────────────────── */
+
+.neon-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  background: color-mix(in srgb, var(--badge-color) 15%, #111827);
+  color: var(--badge-color);
+}
+
+.neon-badge--player {
+  --badge-color: var(--color-neon-player);
+}
+.neon-badge--safe {
+  --badge-color: var(--color-neon-safe);
+}
+.neon-badge--warning {
+  --badge-color: var(--color-neon-warning);
+}
+.neon-badge--neutral {
+  --badge-color: #9ca3af;
+}
