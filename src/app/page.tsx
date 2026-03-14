@@ -1,7 +1,11 @@
+'use client';
+
+import { GameRouter } from '@/presentation/components/GameRouter';
+
 export default function Home() {
   return (
-    <main className="flex min-h-screen items-center justify-center">
-      <h1 className="text-4xl font-bold">Pokémon Stadium Lite</h1>
+    <main className="min-h-screen">
+      <GameRouter />
     </main>
   );
 }

@@ -1,36 +1,83 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Pokémon Stadium Lite — Frontend
 
-## Getting Started
+> Real-time battle client — Next.js · React · Socket.IO · Zustand
 
-First, run the development server:
+![Next.js](https://img.shields.io/badge/next.js-16-000000?style=for-the-badge&logo=nextdotjs&logoColor=white)
+![React](https://img.shields.io/badge/react-19-61DAFB?style=for-the-badge&logo=react&logoColor=black)
+![TypeScript](https://img.shields.io/badge/typescript-5-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
+![Socket.IO](https://img.shields.io/badge/socket.io-4.8-010101?style=for-the-badge&logo=socketdotio&logoColor=white)
+
+## Quick Start
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
+# Install dependencies
+pnpm install
+
+# Start development server
 pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) — the app will prompt you for the backend URL on first launch.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Server URL Configuration
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+On first launch in **development mode**, the app shows a setup screen to enter the backend URL (e.g. `http://192.168.1.100:8080`). The URL is:
 
-## Learn More
+- Stored in `localStorage` — persists across sessions
+- Used for all REST and WebSocket connections
+- No recompilation needed to change it
 
-To learn more about Next.js, take a look at the following resources:
+In **production**, the URL is set at build time via the `NEXT_PUBLIC_API_URL` environment variable.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Architecture
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```
+src/
+├── app/                  Next.js app directory (layout, pages, CSS)
+├── application/
+│   ├── hooks/            Game hooks (useBattle, useLobby, useSocket)
+│   ├── stores/           Zustand stores (lobby, battle, connection, view)
+│   └── ports/            Interfaces for infrastructure
+├── domain/
+│   ├── dtos/             Data transfer objects
+│   ├── events/           Socket event enums
+│   ├── enums/            Domain enums
+│   └── errors/           Error classification
+├── infrastructure/
+│   ├── http/             Fetch HTTP client
+│   ├── socket/           Socket.IO client
+│   └── storage/          LocalStorage client
+├── presentation/
+│   ├── components/       UI components (screens, battle, ui)
+│   └── providers/        GameProvider (dependency injection)
+└── lib/
+    ├── i18n/             Internationalization (en/es)
+    └── tokens.ts         Design tokens
+```
 
-## Deploy on Vercel
+## Scripts
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+| Command          | Description              |
+| ---------------- | ------------------------ |
+| `pnpm dev`       | Start development server |
+| `pnpm build`     | Production build         |
+| `pnpm typecheck` | TypeScript type checking |
+| `pnpm lint`      | ESLint                   |
+| `pnpm test`      | Unit tests               |
+| `pnpm test:e2e`  | End-to-end tests         |
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Tech Stack
+
+- **Framework**: Next.js 16 with App Router
+- **UI**: HeroUI + Tailwind CSS 4 + Framer Motion
+- **State**: Zustand (derived views, no imperative state sync)
+- **WebSocket**: Socket.IO Client
+- **i18n**: Custom provider (English / Spanish)
+- **Testing**: Vitest
+- **Storybook**: Component documentation
+
+## Requirements
+
+- Node.js 22+
+- pnpm
+- Backend running on port 8080 (see [pokemon-stadium-api](https://github.com/jarero321/pokemon-stadium-api))

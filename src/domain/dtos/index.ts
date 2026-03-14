@@ -1,8 +1,4 @@
-export type {
-  LobbyDTO,
-  PlayerDTO,
-  PokemonStateDTO,
-} from './LobbyDTO';
+export type { LobbyDTO, PlayerDTO, PokemonStateDTO } from './LobbyDTO';
 
 export type {
   TurnResultDTO,
@@ -12,3 +8,5 @@ export type {
 } from './BattleDTO';
 
 export type { ApiResponse } from './ApiResponse';
+
+export type { PlayerStatsDTO, RegisterResponseDTO } from './PlayerDTO';
