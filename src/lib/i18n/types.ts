@@ -1,4 +1,11 @@
 export interface Dictionary {
+  serverUrl: {
+    title: string;
+    subtitle: string;
+    hint: string;
+    connect: string;
+    invalid: string;
+  };
   common: {
     you: string;
     opponent: string;

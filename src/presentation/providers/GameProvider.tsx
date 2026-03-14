@@ -1,12 +1,13 @@
 'use client';
 
-import { createContext, useContext, useEffect, useMemo } from 'react';
+import { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import { SocketIOClient } from '@/infrastructure/socket/SocketIOClient';
 import { FetchHttpClient } from '@/infrastructure/http/FetchHttpClient';
 import { LocalStorageClient } from '@/infrastructure/storage/LocalStorageClient';
 import { useConnectionStore, useLobbyStore } from '@/application/stores';
 import { useSocket, useNotifications } from '@/application/hooks';
 import { ClientEvent } from '@/domain/events';
+import { ServerUrlScreen } from '@/presentation/components/ServerUrlScreen';
 import type { ISocketClient } from '@/application/ports';
 import type { IHttpClient } from '@/application/ports';
 import type { IStorage } from '@/application/ports';
@@ -17,7 +18,21 @@ const STORAGE_KEYS = {
   BASE_URL: 'pokemon-stadium-base-url',
 };
 
-const DEFAULT_BASE_URL = 'http://localhost:8080';
+const IS_DEV = process.env.NODE_ENV === 'development';
+const PROD_API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8080';
+
+function resolveBaseUrl(storage: IStorage): string | null {
+  if (typeof window === 'undefined') return PROD_API_URL;
+
+  const stored = storage.get(STORAGE_KEYS.BASE_URL);
+  if (stored) return stored;
+
+  // In production, use the build-time env var
+  if (!IS_DEV) return PROD_API_URL;
+
+  // In dev, require explicit URL input
+  return null;
+}
 
 interface GameContextValue {
   socketClient: ISocketClient;
@@ -37,18 +52,27 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
   const storage = useMemo(() => new LocalStorageClient(), []);
   const socketClient = useMemo(() => new SocketIOClient(), []);
 
+  const [baseUrl, setBaseUrlState] = useState<string | null>(() =>
+    resolveBaseUrl(storage),
+  );
+
   const setBaseUrl = useConnectionStore((s) => s.setBaseUrl);
   const setNickname = useConnectionStore((s) => s.setNickname);
   const setToken = useConnectionStore((s) => s.setToken);
 
-  const baseUrl = useMemo(() => {
-    if (typeof window === 'undefined') return DEFAULT_BASE_URL;
-    return storage.get(STORAGE_KEYS.BASE_URL) ?? DEFAULT_BASE_URL;
-  }, [storage]);
+  const httpClient = useMemo(
+    () => new FetchHttpClient(baseUrl ?? ''),
+    [baseUrl],
+  );
 
-  const httpClient = useMemo(() => new FetchHttpClient(baseUrl), [baseUrl]);
+  const handleUrlSubmit = (url: string) => {
+    storage.set(STORAGE_KEYS.BASE_URL, url);
+    setBaseUrlState(url);
+  };
 
   useEffect(() => {
+    if (!baseUrl) return;
+
     setBaseUrl(baseUrl);
 
     const savedNickname = storage.get(STORAGE_KEYS.NICKNAME);
@@ -84,6 +108,11 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
     () => ({ socketClient, httpClient, storage }),
     [socketClient, httpClient, storage],
   );
+
+  // In dev mode, show URL input if no base URL is set
+  if (!baseUrl) {
+    return <ServerUrlScreen onSubmit={handleUrlSubmit} />;
+  }
 
   return <GameContext.Provider value={value}>{children}</GameContext.Provider>;
 }

@@ -1,6 +1,13 @@
 import type { Dictionary } from './types';
 
 export const en: Dictionary = {
+  serverUrl: {
+    title: 'Server Setup',
+    subtitle: 'Enter the backend URL to connect',
+    hint: 'Enter the IP address where the backend is running (e.g. http://192.168.1.100:8080)',
+    connect: 'Connect',
+    invalid: 'Please enter a valid URL',
+  },
   common: {
     you: 'You',
     opponent: 'Opponent',
