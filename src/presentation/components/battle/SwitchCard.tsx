@@ -38,33 +38,40 @@ export function SwitchCard({
 
   return (
     <Tag
+      role={readonly ? undefined : 'option'}
+      aria-selected={isActive}
+      aria-disabled={!canSelect}
       {...(!readonly && {
         onClick: () => canSelect && onClick?.(),
         disabled: !canSelect,
       })}
-      className={`flex flex-col gap-0.5 p-2 px-2.5 rounded-lg bg-white/[0.04] border-2 border-white/[0.08] transition-all duration-150 text-left
-        ${readonly ? 'cursor-default' : 'cursor-pointer hover:enabled:bg-green-400/[0.08] hover:enabled:border-green-400/30 hover:enabled:translate-x-0.5 disabled:opacity-25 disabled:cursor-not-allowed'}
-        ${isActive ? 'border-sky-400/30 bg-sky-400/[0.06]' : ''}
-        ${pokemon.defeated ? 'border-red-400/15' : ''}`}
+      className={`flex flex-col gap-0.5 p-2 px-2.5 rounded-lg bg-[#0f1420] border-2 border-[#2a3a5c] transition-all duration-150 text-left
+        ${readonly ? 'cursor-default' : 'cursor-pointer hover:enabled:bg-violet-500/[0.08] hover:enabled:border-violet-400/50 hover:enabled:translate-x-0.5 disabled:opacity-25 disabled:cursor-not-allowed'}
+        ${isActive ? 'border-violet-400 bg-violet-500/[0.06]' : ''}
+        ${pokemon.defeated ? 'border-rose-500/20' : ''}`}
     >
       {children ?? (
         <>
-          <span className="text-xs font-extrabold text-slate-100 capitalize tracking-wide flex items-center gap-1.5">
+          <span
+            className={`text-xs font-extrabold capitalize tracking-wide flex items-center gap-1.5 ${pokemon.defeated ? 'text-[#475569]' : 'text-[#e2e8f0]'}`}
+          >
             {pokemon.name}
             {badge && (
-              <span className="text-[8px] font-black text-neon-player bg-sky-400/15 px-1.5 py-px rounded-sm tracking-widest">
+              <span className="text-[8px] font-black text-violet-400 bg-violet-500/15 px-1.5 py-px rounded-sm tracking-widest">
                 {badge}
               </span>
             )}
           </span>
           <div className="flex items-center gap-1.5">
-            <div className="flex-1 h-1 bg-white/[0.08] rounded-sm overflow-hidden">
+            <div className="flex-1 h-1 bg-[#1e2940] rounded-sm overflow-hidden">
               <div
                 className="h-full rounded-sm transition-[width] duration-300"
                 style={{ width: `${hpPct}%`, background: hpColor }}
               />
             </div>
-            <span className="text-[10px] font-bold text-white/40 tabular-nums min-w-[42px] text-right">
+            <span
+              className={`text-[10px] font-bold tabular-nums min-w-[42px] text-right ${pokemon.defeated ? 'text-rose-400/60' : 'text-[#475569]'}`}
+            >
               {pokemon.defeated ? 'FNT' : `${pokemon.hp}/${pokemon.maxHp}`}
             </span>
           </div>

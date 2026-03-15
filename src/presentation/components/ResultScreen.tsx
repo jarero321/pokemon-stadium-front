@@ -1,17 +1,13 @@
 'use client';
 
 import {
-  useConnectionStore,
   useBattleStore,
   useLobbyStore,
+  useConnectionStore,
 } from '@/application/stores';
-import { useGame } from '@/presentation/providers/GameProvider';
-import { useLobby } from '@/application/hooks';
+import { useLeaveGame } from '@/application/hooks';
 import { ResultScreenView } from './ResultScreenView';
 import type { TeamPokemon } from './battle/VictoryOverlay';
-
-const STORAGE_KEY = 'pokemon-stadium-nickname';
-const TOKEN_KEY = 'pokemon-stadium-token';
 
 export function ResultScreen() {
   const winner = useBattleStore((s) => s.winner);
@@ -20,9 +16,8 @@ export function ResultScreen() {
   const opponent = useLobbyStore((s) => s.getOpponent());
   const nickname = useConnectionStore((s) => s.nickname);
   const resetBattle = useBattleStore((s) => s.reset);
-  const resetLobby = useLobbyStore((s) => s.reset);
-  const { socketClient, httpClient, storage } = useGame();
-  const { join } = useLobby(socketClient);
+  const clearLobby = useLobbyStore((s) => s.clearLobby);
+  const leaveGame = useLeaveGame();
 
   // Derived stats
   const totalTurns = events.filter((e) => e.type === 'turn_result').length;
@@ -58,19 +53,13 @@ export function ResultScreen() {
 
   const handlePlayAgain = () => {
     resetBattle();
-    resetLobby();
-    if (nickname) {
-      join(nickname);
-    }
+    clearLobby(); // Keep myNickname, only clear lobby data
+    // Auto-rejoin in GameProvider handles join_lobby
+    // when lobby becomes null (no explicit join needed)
   };
 
   const handleExit = () => {
-    resetBattle();
-    resetLobby();
-    useConnectionStore.getState().reset();
-    storage.remove(STORAGE_KEY);
-    storage.remove(TOKEN_KEY);
-    httpClient.clearToken();
+    leaveGame();
   };
 
   return (

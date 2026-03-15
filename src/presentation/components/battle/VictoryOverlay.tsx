@@ -67,15 +67,16 @@ function AnimatedCounter({
   return <>{display}</>;
 }
 
+// Gold-dominant palette for victory celebration.
+// 3 golds + 1 violet (brand) + 1 emerald + 1 rose + 1 white = 7 distinct colors
 const CONFETTI_COLORS = [
-  '#facc15',
-  '#4ade80',
-  '#38bdf8',
-  '#f9a8d4',
-  '#fb923c',
-  '#818cf8',
-  '#c084fc',
-  '#34d399',
+  '#FBBF24', // amber-400 — gold primary
+  '#FCD34D', // amber-300 — gold light
+  '#F59E0B', // amber-500 — gold deep
+  '#A78BFA', // violet — brand accent
+  '#34D399', // emerald — celebration green
+  '#FB7185', // rose — warm pop
+  '#F1F5F9', // near-white — sparkle
 ];
 
 function seededValue(index: number, offset: number, range: number): number {
@@ -84,24 +85,45 @@ function seededValue(index: number, offset: number, range: number): number {
 }
 
 function generateParticles() {
-  return Array.from({ length: 70 }, (_, i) => {
-    const shapeIndex = i % 3;
+  // Two waves: burst (0-0.6s delay) + cascade (0.8-2.2s delay)
+  const TOTAL = 100;
+  const BURST = 60;
+
+  return Array.from({ length: TOTAL }, (_, i) => {
+    const isBurst = i < BURST;
+
+    // 5 shape types: square, tall rect, wide rect, circle, diamond
+    const shapeIndex = i % 5;
     const borderRadius =
-      shapeIndex === 0 ? '0%' : shapeIndex === 1 ? '0%' : '50%';
-    const aspectRatio = shapeIndex === 1 ? 0.5 : 1;
+      shapeIndex === 3
+        ? '50%' // circle
+        : shapeIndex === 4
+          ? '2px' // diamond (rotated square)
+          : '1px'; // rectangles
+    const extraRotation = shapeIndex === 4 ? 45 : 0;
+
+    const sizeBase = shapeIndex === 3 ? 5 : 4;
+    const w = sizeBase + seededValue(i, 2, shapeIndex <= 2 ? 5 : 4);
+    const h =
+      shapeIndex === 1
+        ? w * 2.5 // tall
+        : shapeIndex === 2
+          ? w * 0.4 // wide
+          : w;
 
     return {
       id: i,
       x: seededValue(i, 1, 100),
       color: CONFETTI_COLORS[i % CONFETTI_COLORS.length],
-      size: 4 + seededValue(i, 2, 6),
-      height: (8 + seededValue(i, 3, 8)) * (shapeIndex === 1 ? 2 : 1),
-      delay: seededValue(i, 4, 1.2),
-      duration: 3.0 + seededValue(i, 5, 3),
-      rotation: 360 + seededValue(i, 6, 720),
-      wobble: 20 + seededValue(i, 7, 40),
+      size: w,
+      height: h,
+      delay: isBurst
+        ? seededValue(i, 4, 0.6) // burst: 0–0.6s
+        : 0.8 + seededValue(i, 4, 1.4), // cascade: 0.8–2.2s
+      duration: 2.5 + seededValue(i, 5, 3.5),
+      rotation: extraRotation + 360 + seededValue(i, 6, 1080),
+      wobble: 15 + seededValue(i, 7, 50),
       borderRadius,
-      aspectRatio,
     };
   });
 }
@@ -157,7 +179,7 @@ function TeamRow({
     >
       <span
         className={`text-[10px] font-bold tracking-[0.12em] uppercase ${
-          isWinnerRow ? 'text-green-400/70' : 'text-red-400/50'
+          isWinnerRow ? 'text-emerald-400/70' : 'text-rose-400/50'
         }`}
       >
         {label}
@@ -226,8 +248,8 @@ export function VictoryOverlay({
         <motion.div
           className={`fixed inset-0 z-50 flex flex-col items-center justify-center gap-5 p-6 backdrop-blur-[16px] ${
             isVictory
-              ? 'bg-[rgba(4,8,18,0.88)]'
-              : 'bg-[rgba(4,4,12,0.94)] [background:radial-gradient(ellipse_at_center,transparent_30%,rgba(0,0,0,0.70)_100%),rgba(4,4,12,0.94)]'
+              ? 'bg-[rgba(4,6,14,0.92)]'
+              : '[background:radial-gradient(ellipse_at_center,rgba(244,63,94,0.05)_0%,transparent_60%),rgba(4,6,14,0.96)]'
           }`}
           role="dialog"
           aria-modal="true"
@@ -244,7 +266,7 @@ export function VictoryOverlay({
             className={`victory-overlay__title text-[72px] max-sm:text-[48px] font-black uppercase tracking-wider leading-none ${
               isVictory
                 ? 'bg-gradient-to-r from-amber-300 via-yellow-400 to-amber-500 bg-clip-text text-transparent'
-                : 'text-gray-400'
+                : 'text-rose-400/80'
             }`}
             initial={
               isVictory ? { scale: 0, opacity: 0 } : { y: -20, opacity: 0 }
@@ -351,13 +373,13 @@ export function VictoryOverlay({
                 key={stat.label}
                 className="flex flex-col items-center gap-1"
               >
-                <span className="text-[10px] font-bold tracking-[0.12em] uppercase text-white/35">
+                <span className="text-[10px] font-bold tracking-[0.12em] uppercase text-[#475569]">
                   {stat.label}
                 </span>
                 <span
-                  className={`victory-overlay__stat-value text-[28px] max-sm:text-[22px] font-black tabular-nums text-slate-100 ${
+                  className={`victory-overlay__stat-value text-[28px] max-sm:text-[22px] font-black font-mono tabular-nums text-[#e2e8f0] ${
                     isVictory
-                      ? '[text-shadow:0_0_12px_rgba(250,204,21,0.30)]'
+                      ? '[text-shadow:0_0_12px_rgba(250,204,21,0.25)]'
                       : ''
                   }`}
                 >
@@ -380,18 +402,12 @@ export function VictoryOverlay({
           >
             <button
               onClick={onPlayAgain}
-              className="battle-btn battle-btn--attack min-w-[160px]"
+              className="battle-btn battle-btn--success min-w-[160px]"
               autoFocus
             >
               {t('result.playAgain')}
             </button>
-            <button
-              onClick={onExit}
-              className="battle-action-btn min-w-[160px]"
-              style={
-                { '--btn-neon': 'rgba(255,255,255,0.3)' } as React.CSSProperties
-              }
-            >
+            <button onClick={onExit} className="ghost-btn min-w-[160px]">
               {t('result.exitToMenu')}
             </button>
           </motion.div>

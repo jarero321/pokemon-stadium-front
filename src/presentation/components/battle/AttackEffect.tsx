@@ -29,16 +29,12 @@ function getStyle(type: string): AttackStyle {
   return TYPE_TO_STYLE[type] ?? 'strike';
 }
 
-/* ─── Shared ─── */
-
 const LAYER: React.CSSProperties = {
   position: 'absolute',
   inset: 0,
   pointerEvents: 'none',
   borderRadius: 'inherit',
 };
-
-/* ─── Blaze (fire, dragon) ─── */
 
 function BlazeEffect({ onComplete }: { onComplete?: () => void }) {
   return (
@@ -115,8 +111,6 @@ function BlazeEffect({ onComplete }: { onComplete?: () => void }) {
   );
 }
 
-/* ─── Aqua (water, ice) ─── */
-
 function AquaEffect({ onComplete }: { onComplete?: () => void }) {
   return (
     <>
@@ -183,8 +177,6 @@ function AquaEffect({ onComplete }: { onComplete?: () => void }) {
     </>
   );
 }
-
-/* ─── Bolt (electric) ─── */
 
 function BoltEffect({ onComplete }: { onComplete?: () => void }) {
   return (
@@ -278,8 +270,6 @@ function BoltEffect({ onComplete }: { onComplete?: () => void }) {
   );
 }
 
-/* ─── Mystic (psychic, fairy, ghost, dark, poison) ─── */
-
 function MysticEffect({ onComplete }: { onComplete?: () => void }) {
   return (
     <>
@@ -316,8 +306,6 @@ function MysticEffect({ onComplete }: { onComplete?: () => void }) {
     </>
   );
 }
-
-/* ─── Strike (fighting, normal, ground, rock, etc.) ─── */
 
 function StrikeEffect({ onComplete }: { onComplete?: () => void }) {
   return (
@@ -413,8 +401,6 @@ function StrikeEffect({ onComplete }: { onComplete?: () => void }) {
   );
 }
 
-/* ─── Slash (normal, rock, steel, bug, grass, flying) ─── */
-
 function SlashEffect({ onComplete }: { onComplete?: () => void }) {
   const slashes = [
     { rotate: -35, delay: 0 },
@@ -481,8 +467,6 @@ function SlashEffect({ onComplete }: { onComplete?: () => void }) {
   );
 }
 
-/* ─── Effect map ─── */
-
 const EFFECT_COMPONENTS: Record<
   AttackStyle,
   React.FC<{ onComplete?: () => void }>
@@ -494,8 +478,6 @@ const EFFECT_COMPONENTS: Record<
   strike: StrikeEffect,
   slash: SlashEffect,
 };
-
-/* ─── AttackEffect (orchestrator) ─── */
 
 interface AttackEffectProps {
   types: string[];
