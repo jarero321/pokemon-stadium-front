@@ -42,6 +42,8 @@ export const en: Dictionary = {
     totalBattles: '{{count}} total battles',
     charRules:
       '1-20 characters. Letters, numbers, spaces, hyphens, underscores.',
+    activeSessionWarning:
+      'This trainer is already registered. If another session is currently active, you will not be able to join the lobby.',
   },
   lobby: {
     title: 'Lobby',
@@ -53,6 +55,11 @@ export const en: Dictionary = {
     noTeam: 'No team',
     nPokemon: '{{count}} Pokémon',
     shareUrl: 'Share the server URL with a friend to join!',
+    leave: 'Leave Lobby',
+    matchmaking: 'Finding Match...',
+    stepCreating: 'Lobby created',
+    stepWaiting: 'Waiting for opponent',
+    stepAssigning: 'Assigning teams',
   },
   ready: {
     title: 'Ready Up',
@@ -92,6 +99,8 @@ export const en: Dictionary = {
     noLeft: 'no Pokémon left!',
     battleEnded: 'Battle ended — {{winner}} wins!',
     wins: '{{name}} wins!',
+    surrender: 'Surrender',
+    actions: 'Battle actions',
     tips: [
       'Type advantages deal 1.5x damage — exploit them!',
       'Switching costs your turn. Make it count.',
