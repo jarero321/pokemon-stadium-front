@@ -15,7 +15,7 @@ const baseArgs = {
   status: 'connected' as const,
   connectionError: null,
   nickname: 'Ash',
-  onAssign: () => {},
+  onLeave: () => {},
 };
 
 export const WaitingForOpponent: Story = {
@@ -25,7 +25,6 @@ export const WaitingForOpponent: Story = {
     myPlayer: { ...MY_PLAYER, team: [] },
     opponent: null,
     waitingForOpponent: true,
-    assigning: false,
   },
 };
 
@@ -36,18 +35,6 @@ export const BothJoined: Story = {
     myPlayer: { ...MY_PLAYER, team: [] },
     opponent: { ...OPPONENT, team: [] },
     waitingForOpponent: false,
-    assigning: false,
-  },
-};
-
-export const Assigning: Story = {
-  args: {
-    ...baseArgs,
-    lobbyStatus: 'waiting',
-    myPlayer: { ...MY_PLAYER, team: [] },
-    opponent: { ...OPPONENT, team: [] },
-    waitingForOpponent: false,
-    assigning: true,
   },
 };
 
@@ -58,7 +45,6 @@ export const TeamsAssigned: Story = {
     myPlayer: MY_PLAYER,
     opponent: OPPONENT,
     waitingForOpponent: false,
-    assigning: false,
   },
 };
 
@@ -70,7 +56,6 @@ export const Reconnecting: Story = {
     myPlayer: MY_PLAYER,
     opponent: null,
     waitingForOpponent: true,
-    assigning: false,
   },
 };
 
@@ -83,6 +68,5 @@ export const ConnectionError: Story = {
     myPlayer: MY_PLAYER,
     opponent: OPPONENT,
     waitingForOpponent: false,
-    assigning: false,
   },
 };

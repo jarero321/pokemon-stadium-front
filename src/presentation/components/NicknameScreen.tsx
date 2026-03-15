@@ -13,7 +13,12 @@ const TOKEN_KEY = 'pokemon-stadium-token';
 export function NicknameScreen() {
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(() => {
+    if (typeof window === 'undefined') return null;
+    const stored = sessionStorage.getItem('pokemon-stadium-error');
+    if (stored) sessionStorage.removeItem('pokemon-stadium-error');
+    return stored;
+  });
   const [registerResult, setRegisterResult] =
     useState<RegisterResponseDTO | null>(null);
 
@@ -45,6 +50,9 @@ export function NicknameScreen() {
 
       if (res.data) {
         setRegisterResult(res.data);
+        // Connect socket immediately so it's ready for join_lobby
+        setToken(res.data.token);
+        httpClient.setToken(res.data.token);
       }
     } catch {
       setError('Could not connect to server');
@@ -60,8 +68,7 @@ export function NicknameScreen() {
     storage.set(STORAGE_KEY, nick);
     storage.set(TOKEN_KEY, token);
     setNickname(nick);
-    setToken(token);
-    httpClient.setToken(token);
+    // Token already set during registration (handleRegister).
     // Socket connects via useSocket (triggered by token change).
     // Auto-rejoin in GameProvider handles join_lobby once connected.
   };

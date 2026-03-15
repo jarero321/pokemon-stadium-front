@@ -7,6 +7,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { useTranslation, useTips } from '@/lib/i18n';
 import { TypeBadge, TurnIndicator } from './battle';
 import { ConnectionDot } from './ui/ConnectionDot';
+import { CountdownRing } from './ui/CountdownRing';
 
 export interface ReadyScreenViewProps {
   status: ConnectionStatus;
@@ -16,6 +17,33 @@ export interface ReadyScreenViewProps {
   isReady: boolean;
   isBothReady: boolean;
   onReady: () => void;
+  countdown: { remaining: number; progress: number } | null;
+}
+
+// Map the first type of a pokemon to a left-border accent color
+function typeBorderClass(types: string[]): string {
+  const type = types[0]?.toLowerCase() ?? '';
+  const map: Record<string, string> = {
+    fire: 'border-l-[3px] border-l-orange-500/60',
+    water: 'border-l-[3px] border-l-blue-400/60',
+    grass: 'border-l-[3px] border-l-emerald-500/60',
+    electric: 'border-l-[3px] border-l-yellow-400/60',
+    psychic: 'border-l-[3px] border-l-pink-500/60',
+    ice: 'border-l-[3px] border-l-cyan-300/60',
+    dragon: 'border-l-[3px] border-l-indigo-500/60',
+    dark: 'border-l-[3px] border-l-[#475569]/80',
+    fairy: 'border-l-[3px] border-l-pink-300/60',
+    fighting: 'border-l-[3px] border-l-red-600/60',
+    poison: 'border-l-[3px] border-l-purple-500/60',
+    ground: 'border-l-[3px] border-l-amber-700/60',
+    rock: 'border-l-[3px] border-l-stone-500/60',
+    ghost: 'border-l-[3px] border-l-violet-500/60',
+    steel: 'border-l-[3px] border-l-slate-400/60',
+    bug: 'border-l-[3px] border-l-lime-500/60',
+    flying: 'border-l-[3px] border-l-sky-400/60',
+    normal: 'border-l-[3px] border-l-[#475569]/50',
+  };
+  return map[type] ?? 'border-l-[3px] border-l-[#2a3a5c]';
 }
 
 function PokemonCard({ pokemon }: { pokemon: PokemonStateDTO }) {
@@ -24,18 +52,20 @@ function PokemonCard({ pokemon }: { pokemon: PokemonStateDTO }) {
   const staticSrc = pokemon.sprite;
 
   return (
-    <div className="flex items-center gap-3 rounded-lg border border-white/[0.06] bg-white/[0.03] p-2.5">
-      {/* eslint-disable-next-line @next/next/no-img-element -- animated GIF with onError fallback requires native img */}
+    <div
+      className={`flex items-center gap-3 rounded-lg border border-[#1e2940] bg-[#0f1420] p-2.5 transition-colors hover:bg-[#161d2e] ${typeBorderClass(pokemon.type)}`}
+    >
+      {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src={imgError ? staticSrc : animatedSrc}
         alt={pokemon.name}
-        width={72}
-        height={72}
+        width={56}
+        height={56}
         className="pixelated"
         onError={() => setImgError(true)}
       />
-      <div className="flex flex-col gap-1">
-        <p className="text-sm font-extrabold capitalize tracking-wide text-slate-100">
+      <div className="flex min-w-0 flex-1 flex-col gap-0.5">
+        <p className="truncate text-sm font-extrabold capitalize text-[#e2e8f0]">
           {pokemon.name}
         </p>
         <div className="flex gap-1">
@@ -43,15 +73,15 @@ function PokemonCard({ pokemon }: { pokemon: PokemonStateDTO }) {
             <TypeBadge key={t} type={t} />
           ))}
         </div>
-        <div className="flex gap-2 text-[10px] font-bold uppercase tracking-wider text-white/40">
+        <div className="flex gap-2 text-[10px] font-bold uppercase tracking-wider text-[#475569]">
           <span>
-            ATK <span className="text-white/70">{pokemon.attack}</span>
+            ATK <span className="text-[#94a3b8]">{pokemon.attack}</span>
           </span>
           <span>
-            DEF <span className="text-white/70">{pokemon.defense}</span>
+            DEF <span className="text-[#94a3b8]">{pokemon.defense}</span>
           </span>
           <span>
-            SPD <span className="text-white/70">{pokemon.speed}</span>
+            SPD <span className="text-[#94a3b8]">{pokemon.speed}</span>
           </span>
         </div>
       </div>
@@ -71,20 +101,18 @@ function RotatingTips() {
   }, [tips.length]);
 
   return (
-    <div className="relative h-10 overflow-hidden">
-      <AnimatePresence mode="wait">
-        <motion.p
-          key={index}
-          className="absolute inset-0 flex items-center justify-center text-center text-xs text-white/40"
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -10 }}
-          transition={{ duration: 0.3 }}
-        >
-          💡 {tips[index]}
-        </motion.p>
-      </AnimatePresence>
-    </div>
+    <AnimatePresence mode="wait">
+      <motion.p
+        key={index}
+        className="text-center text-xs text-[#475569]"
+        initial={{ opacity: 0, y: 6 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: -6 }}
+        transition={{ duration: 0.3, ease: 'easeInOut' }}
+      >
+        {tips[index]}
+      </motion.p>
+    </AnimatePresence>
   );
 }
 
@@ -92,10 +120,10 @@ export function ReadyScreenView({
   status,
   myPlayer,
   opponent,
-  lobbyStatus,
   isReady,
   isBothReady,
   onReady,
+  countdown,
 }: ReadyScreenViewProps) {
   const { t } = useTranslation();
 
@@ -107,24 +135,27 @@ export function ReadyScreenView({
         : t('ready.reviewTeam');
 
   return (
-    <div className="flex min-h-screen items-center justify-center p-4">
-      <div className="w-full max-w-3xl glass-panel rounded-xl p-8">
-        {/* Connection warning */}
-        {status !== 'connected' && (
-          <div className="mb-4">
-            <ConnectionDot status={status} />
-          </div>
-        )}
+    <div className="flex h-[100dvh] flex-col bg-[#080c14]">
+      {/* Connection warning */}
+      {status !== 'connected' && (
+        <div className="px-4 pt-3">
+          <ConnectionDot status={status} />
+        </div>
+      )}
 
-        <h2 className="screen-heading mb-2 text-center">{t('ready.title')}</h2>
-        <p className="mb-6 text-center text-sm text-white/40">{subtitle}</p>
+      {/* Header */}
+      <div className="px-4 pt-6 pb-3 text-center">
+        <h2 className="screen-heading mb-1.5">{t('ready.title')}</h2>
+        <p className="screen-subtitle">{subtitle}</p>
+      </div>
 
-        {/* Teams side by side with VS divider */}
-        <div className="mb-6 grid grid-cols-[1fr_auto_1fr] gap-4">
+      {/* Scrollable teams area */}
+      <div className="flex-1 overflow-y-auto px-4 pb-2">
+        <div className="mx-auto flex w-full max-w-3xl flex-col gap-4 md:grid md:grid-cols-[1fr_auto_1fr] md:gap-6">
           {/* My team */}
           <div>
             <div className="mb-3 flex items-center justify-between">
-              <p className="text-sm font-bold text-gray-100">
+              <p className="text-sm font-bold text-violet-400">
                 {myPlayer?.nickname ?? t('common.you')}
               </p>
               {myPlayer?.ready ? (
@@ -145,18 +176,18 @@ export function ReadyScreenView({
           </div>
 
           {/* VS divider */}
-          <div className="flex flex-col items-center justify-center gap-2">
-            <div className="h-full w-px bg-white/10" />
-            <span className="text-2xl font-black uppercase tracking-widest text-white/20 animate-pulse">
+          <div className="flex items-center justify-center md:flex-col md:gap-2">
+            <div className="h-px flex-1 bg-[#1e2940] md:h-full md:w-px md:flex-none" />
+            <span className="mx-4 text-xl font-black uppercase tracking-widest text-violet-400 animate-pulse md:mx-0">
               VS
             </span>
-            <div className="h-full w-px bg-white/10" />
+            <div className="h-px flex-1 bg-[#1e2940] md:h-full md:w-px md:flex-none" />
           </div>
 
           {/* Opponent team */}
           <div>
             <div className="mb-3 flex items-center justify-between">
-              <p className="text-sm font-bold text-gray-100">
+              <p className="text-sm font-bold text-rose-400">
                 {opponent?.nickname ?? t('common.opponent')}
               </p>
               {opponent?.ready ? (
@@ -176,27 +207,33 @@ export function ReadyScreenView({
             </div>
           </div>
         </div>
+      </div>
 
-        {/* Status */}
-        <div className="mb-4 text-center text-xs text-gray-500">
-          {lobbyStatus ?? t('common.loading')}
+      {/* Sticky footer */}
+      <div className="border-t border-[#1e2940] bg-[#080c14]/95 backdrop-blur-md px-4 py-3 safe-bottom">
+        <div className="mx-auto flex w-full max-w-3xl items-center gap-3">
+          {countdown && (
+            <CountdownRing
+              remaining={countdown.remaining}
+              progress={countdown.progress}
+              size={44}
+            />
+          )}
+          <button
+            onClick={onReady}
+            disabled={myPlayer?.ready}
+            className="battle-btn battle-btn--success flex-1"
+          >
+            {isBothReady
+              ? t('ready.startingBattle')
+              : myPlayer?.ready
+                ? t('ready.waitingOpponent')
+                : t('ready.imReady')}
+          </button>
         </div>
 
-        {/* Ready button */}
-        <button
-          onClick={onReady}
-          disabled={myPlayer?.ready}
-          className="battle-btn battle-btn--attack"
-        >
-          {isBothReady
-            ? t('ready.startingBattle')
-            : myPlayer?.ready
-              ? t('ready.waitingOpponent')
-              : t('ready.imReady')}
-        </button>
-
-        {/* Rotating tips */}
-        <div className="mt-4">
+        {/* Tips */}
+        <div className="mx-auto mt-2 max-w-3xl">
           <RotatingTips />
         </div>
       </div>
