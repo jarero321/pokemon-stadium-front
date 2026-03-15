@@ -7,18 +7,18 @@
 /* ── Design Tokens ─────────────────────────────────────── */
 
 @theme {
-  /* Surface system — solid flat panels */
-  --color-glass-bg: #1e293b;
-  --color-glass-bg-light: #283548;
-  --color-glass-border: #334155;
-  --color-glass-border-glow: #475569;
+  /* Surface system — Stadium Midnight */
+  --color-glass-bg: #0f1420;
+  --color-glass-bg-light: #161d2e;
+  --color-glass-border: #1e2940;
+  --color-glass-border-glow: #2a3a5c;
 
   /* Semantic palette */
-  --color-neon-player: #3b82f6;
-  --color-neon-opponent: #ef4444;
-  --color-neon-safe: #22c55e;
-  --color-neon-warning: #eab308;
-  --color-neon-danger: #ef4444;
+  --color-neon-player: #8b5cf6;
+  --color-neon-opponent: #f43f5e;
+  --color-neon-safe: #10b981;
+  --color-neon-warning: #f59e0b;
+  --color-neon-danger: #f43f5e;
 
   /* Type colors */
   --color-type-fire: #f97316;
@@ -75,19 +75,29 @@
 @utility glass {
   background: var(--color-glass-bg);
   border: 1px solid var(--color-glass-border);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.03) inset,
+    0 2px 12px rgba(0, 0, 0, 0.4);
 }
 
 @utility glass-panel {
-  background: var(--color-glass-bg);
+  background: linear-gradient(
+    160deg,
+    var(--color-glass-bg-light) 0%,
+    var(--color-glass-bg) 100%
+  );
   border: 1px solid var(--color-glass-border);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.04) inset,
+    0 4px 24px rgba(0, 0, 0, 0.5),
+    0 1px 4px rgba(0, 0, 0, 0.3);
 }
 
 @utility hp-track {
   position: relative;
   height: 6px;
   border-radius: 9999px;
-  background: #374151;
+  background: #1e2940;
   overflow: hidden;
 }
 
@@ -106,6 +116,27 @@
   font-size: 32px;
   font-weight: 800;
   color: #f1f5f9;
+}
+
+@utility screen-title {
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: #e2e8f0;
+}
+
+@utility screen-subtitle {
+  font-size: 14px;
+  font-weight: 500;
+  color: #64748b;
+  line-height: 1.5;
+}
+
+@utility brand-gradient {
+  background: linear-gradient(135deg, #a78bfa, #7c3aed);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 /* ── Pokeball ───────────────────────────────────────────── */
@@ -195,24 +226,27 @@
 .battle-arena {
   position: relative;
   width: 100%;
-  aspect-ratio: 16 / 9;
-  min-height: 260px;
+  flex: 1;
+  min-height: 200px;
   overflow: hidden;
-  border-radius: 12px;
-  border: 2px solid #334155;
+  border: none;
+  border-radius: 0;
   container-type: inline-size;
 }
 
 @media (min-width: 640px) {
   .battle-arena {
+    aspect-ratio: 16 / 9;
+    flex: none;
     border-radius: 16px;
+    border: 2px solid #1e2940;
   }
 }
 
 .battle-arena__bg {
   position: absolute;
   inset: 0;
-  background-color: #111827;
+  background-color: #080c14;
   z-index: 0;
   filter: brightness(0.9) saturate(1.1);
 }
@@ -328,22 +362,25 @@
 
 .glass-input {
   width: 100%;
-  padding: 12px 16px;
+  padding: 13px 18px;
   border-radius: 8px;
-  background: #111827;
-  border: 1px solid #374151;
+  background: #080c14;
+  border: 1px solid #1e2940;
   color: #f1f5f9;
   font-size: 14px;
   outline: none;
-  transition: border-color var(--t-normal);
+  transition:
+    border-color var(--t-normal),
+    box-shadow var(--t-normal);
 }
 
 .glass-input::placeholder {
-  color: #6b7280;
+  color: #4b5563;
 }
 
 .glass-input:focus {
   border-color: var(--color-neon-player);
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.12);
 }
 
 /* ── Ghost Button ──────────────────────────────────────── */
@@ -356,50 +393,62 @@
   font-size: 13px;
   color: #9ca3af;
   background: transparent;
-  border: 1px solid #374151;
+  border: 1px solid #1e2940;
   cursor: pointer;
   transition:
     background var(--t-fast),
-    color var(--t-fast);
+    color var(--t-fast),
+    transform var(--t-fast),
+    border-color var(--t-fast);
 }
 
 .ghost-btn:hover {
-  background: #283548;
+  background: #161d2e;
   color: #f1f5f9;
+  border-color: #2a3a5c;
+  transform: translateY(-1px);
 }
 
 /* ── Battle Btn Variants ───────────────────────────────── */
 
 .battle-btn--primary {
-  background: #3b82f6;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+  box-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.3),
+    0 1px 0 rgba(255, 255, 255, 0.08) inset;
 }
 
 .battle-btn--primary:not(:disabled):hover {
-  background: #2563eb;
+  background: linear-gradient(135deg, #a78bfa, #8b5cf6);
   transform: translateY(-1px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  box-shadow:
+    0 6px 16px rgba(139, 92, 246, 0.35),
+    0 1px 0 rgba(255, 255, 255, 0.1) inset;
 }
 
 .battle-btn--primary:not(:disabled):active {
   transform: translateY(0);
-  background: #1d4ed8;
+  background: linear-gradient(135deg, #7c3aed, #6d28d9);
 }
 
 .battle-btn--success {
-  background: #22c55e;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  background: linear-gradient(135deg, #10b981, #059669);
+  box-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.3),
+    0 1px 0 rgba(255, 255, 255, 0.08) inset;
 }
 
 .battle-btn--success:not(:disabled):hover {
-  background: #16a34a;
+  background: linear-gradient(135deg, #34d399, #10b981);
   transform: translateY(-1px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  box-shadow:
+    0 6px 16px rgba(16, 185, 129, 0.35),
+    0 1px 0 rgba(255, 255, 255, 0.1) inset;
 }
 
 .battle-btn--success:not(:disabled):active {
   transform: translateY(0);
-  background: #15803d;
+  background: linear-gradient(135deg, #059669, #047857);
 }
 
 /* ── Alert Banner ──────────────────────────────────────── */
@@ -409,8 +458,8 @@
   border-radius: 8px;
   font-size: 13px;
   text-align: center;
-  background: color-mix(in srgb, var(--alert-color) 12%, #111827);
-  border: 1px solid color-mix(in srgb, var(--alert-color) 30%, transparent);
+  background: color-mix(in srgb, var(--alert-color) 8%, #080c14);
+  border: 1px solid color-mix(in srgb, var(--alert-color) 20%, transparent);
   color: var(--alert-color);
 }
 
@@ -433,13 +482,29 @@
   position: relative;
   padding: 14px 16px;
   border-radius: 10px;
-  background: var(--color-glass-bg);
-  border: 2px solid var(--player-accent, #374151);
+  background: linear-gradient(
+    160deg,
+    var(--color-glass-bg-light) 0%,
+    var(--color-glass-bg) 100%
+  );
+  border: 2px solid var(--player-accent, #1e2940);
   border-left-width: 4px;
+  overflow: hidden;
 }
 
 .player-card::before {
-  display: none;
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.06),
+    transparent
+  );
 }
 
 .player-card--self {
@@ -447,69 +512,6 @@
 }
 .player-card--opponent {
   --player-accent: var(--color-neon-opponent);
-}
-
-/* ── Connection Dot ────────────────────────────────────── */
-
-.connection-dot {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  font-size: 12px;
-  color: #9ca3af;
-}
-
-.connection-dot__indicator {
-  display: inline-block;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--dot-color);
-  transition: background var(--t-normal);
-}
-
-.connection-dot--connected {
-  --dot-color: var(--color-neon-safe);
-}
-.connection-dot--connecting,
-.connection-dot--reconnecting {
-  --dot-color: var(--color-neon-warning);
-}
-.connection-dot--error {
-  --dot-color: var(--color-neon-danger);
-}
-.connection-dot--idle {
-  --dot-color: #6b7280;
-}
-
-.connection-dot--connecting .connection-dot__indicator,
-.connection-dot--reconnecting .connection-dot__indicator {
-  animation: dot-blink 1s step-start infinite;
-}
-
-/* ── Stat Block ────────────────────────────────────────── */
-
-.stat-block {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 2px;
-}
-
-.stat-block__value {
-  font-size: 18px;
-  font-weight: 700;
-  color: #f1f5f9;
-  font-variant-numeric: tabular-nums;
-}
-
-.stat-block__label {
-  font-size: 10px;
-  font-weight: 600;
-  color: #6b7280;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
 }
 
 /* ── Neon Badge ────────────────────────────────────────── */
@@ -521,7 +523,7 @@
   border-radius: 6px;
   font-size: 11px;
   font-weight: 600;
-  background: color-mix(in srgb, var(--badge-color) 15%, #111827);
+  background: color-mix(in srgb, var(--badge-color) 15%, #080c14);
   color: var(--badge-color);
 }
 
@@ -536,4 +538,277 @@
 }
 .neon-badge--neutral {
   --badge-color: #9ca3af;
+}
+
+/* ── Mobile safe areas ─────────────────────────────────── */
+@utility safe-bottom {
+  padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
+}
+
+/* ── Info Panel ───────────────────────────────────────── */
+
+@utility info-panel {
+  position: relative;
+  background: #0f1420;
+  border: 1px solid #1e2940;
+  border-radius: 8px;
+  box-shadow:
+    0 4px 16px rgba(0, 0, 0, 0.4),
+    0 1px 0 rgba(255, 255, 255, 0.03) inset;
+}
+
+@utility info-panel--player {
+  --panel-accent: var(--color-neon-player);
+}
+
+@utility info-panel--opponent {
+  --panel-accent: var(--color-neon-opponent);
+}
+
+@utility info-panel__hp-ghost {
+  position: absolute;
+  inset: 0 auto 0 0;
+  border-radius: 99px;
+  background: rgba(255, 255, 255, 0.12);
+  transition: width var(--t-ghost-slide) ease-out;
+}
+
+@utility info-panel__hp-fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  border-radius: 99px;
+  background: var(--hp-color, var(--color-neon-safe));
+  transition:
+    width var(--t-hp-fill) var(--ease-snappy),
+    background-color var(--t-blaze);
+}
+
+@utility info-panel__hp-label {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--hp-color, var(--color-neon-safe));
+  transition: color 400ms;
+}
+
+@utility info-panel__stat-bar {
+  width: 100%;
+  height: 2px;
+  border-radius: 99px;
+  background: #1e2940;
+  overflow: hidden;
+}
+
+/* ── Pokemon Card ─────────────────────────────────────── */
+
+@utility pokemon-card {
+  position: relative;
+  border-radius: 12px;
+  padding: 16px;
+  background: #0f1420;
+  border: 2px solid var(--card-border, #1e2940);
+  box-shadow:
+    0 4px 16px rgba(0, 0, 0, 0.4),
+    0 1px 0 rgba(255, 255, 255, 0.03) inset;
+  overflow: hidden;
+  transition: border-color 300ms;
+}
+
+@utility pokemon-card--player {
+  --card-border: #8b5cf6;
+}
+
+@utility pokemon-card--opponent {
+  --card-border: #f43f5e;
+}
+
+/* ── Battle Btn ───────────────────────────────────────── */
+
+@utility battle-btn {
+  position: relative;
+  width: 100%;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 14px;
+  color: #fff;
+  cursor: pointer;
+  overflow: hidden;
+  transition:
+    transform var(--t-micro),
+    background var(--t-fast),
+    box-shadow var(--t-fast);
+  border: none;
+}
+
+@utility battle-btn--attack {
+  background: linear-gradient(135deg, #f43f5e, #e11d48);
+  box-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.3),
+    0 1px 0 rgba(255, 255, 255, 0.08) inset;
+}
+
+/* ── Battle Action Btn ────────────────────────────────── */
+
+@utility battle-action-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 20px;
+  height: 46px;
+  border-radius: 8px;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 700;
+  color: #fff;
+  background: var(--btn-color, #1e2940);
+  border: none;
+  box-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.3),
+    0 1px 0 rgba(255, 255, 255, 0.06) inset;
+  transition:
+    transform var(--t-micro),
+    background var(--t-fast),
+    box-shadow var(--t-fast);
+}
+
+@utility battle-action-btn--fight {
+  --btn-color: #f43f5e;
+}
+
+@utility battle-action-btn--pokemon {
+  --btn-color: #8b5cf6;
+}
+
+/* ── Move Cell ────────────────────────────────────────── */
+
+@utility move-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  padding: 8px 8px 6px;
+  border-radius: 8px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  text-align: left;
+  background: color-mix(in srgb, var(--move-type-color) 12%, #0f1420);
+  border: 1px solid color-mix(in srgb, var(--move-type-color) 30%, transparent);
+  transition:
+    transform var(--t-micro),
+    border-color var(--t-fast);
+}
+
+@utility move-cell--disabled {
+  --move-type-color: #2a3a5c;
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+@utility move-cell--selected {
+  border-color: var(--move-type-color);
+  cursor: wait;
+}
+
+@utility move-cell__name {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #f1f5f9;
+}
+
+/* ── Status Badge ─────────────────────────────────────── */
+
+@utility status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 1px 5px;
+  border-radius: 4px;
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--status-color);
+  pointer-events: none;
+  background: color-mix(in srgb, var(--status-color) 15%, #0f1420);
+  border: 1px solid color-mix(in srgb, var(--status-color) 35%, transparent);
+}
+
+@utility status-badge__icon {
+  font-size: 10px;
+  line-height: 1;
+}
+
+/* ── Weather Indicator ────────────────────────────────── */
+
+@utility weather-indicator {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 3;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 10px 3px 7px;
+  border-radius: 6px;
+  pointer-events: none;
+  background: #0f1420;
+  border: 1px solid color-mix(in srgb, var(--weather-color) 30%, #1e2940);
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--weather-color);
+}
+
+/* ── Battle HUD ───────────────────────────────────────── */
+
+@utility battle-hud {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 2px auto;
+  grid-template-rows: auto 1fr;
+  border: 2px solid #1e2940;
+  border-radius: 10px;
+  background: #080c14;
+  overflow: hidden;
+  min-height: 100px;
+  box-shadow:
+    0 4px 24px rgba(0, 0, 0, 0.5),
+    0 1px 0 rgba(255, 255, 255, 0.03) inset;
+  transition: border-color 300ms;
+}
+
+@utility battle-hud__divider {
+  width: 100%;
+  height: 100%;
+  background: #1e2940;
+}
+
+/* ── Stat Block ───────────────────────────────────────── */
+
+@utility stat-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+@utility stat-block__value {
+  font-size: 18px;
+  font-weight: 700;
+  color: #f1f5f9;
+  font-variant-numeric: tabular-nums;
+}
+
+@utility stat-block__label {
+  font-size: 10px;
+  font-weight: 600;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
 }

@@ -6,8 +6,6 @@
  *   - CSS via @theme in globals.css (mirrored values)
  */
 
-/* ── Easing curves ── */
-
 export const EASE = {
   /** Overshoot bounce — pokeball pop, enter animations */
   bounce: [0.34, 1.56, 0.64, 1] as [number, number, number, number],
@@ -18,8 +16,6 @@ export const EASE = {
   /** Dramatic slow-out — fainting, KO sequences */
   ko: [0.4, 0.0, 0.2, 1.0] as [number, number, number, number],
 } as const;
-
-/* ── Duration scale (seconds, Framer Motion convention) ── */
 
 export const DURATION = {
   /** 0.05s — instant feedback (opacity snaps, micro-flashes) */
@@ -59,8 +55,6 @@ export const DURATION = {
   /** 3.0s — platform pulse / idle scan */
   platformPulse: 3.0,
 } as const;
-
-/* ── Runtime type-color reader ── */
 
 const TYPE_FALLBACKS: Record<string, string> = {
   fire: '#f97316',
@@ -107,3 +101,10 @@ export function getHpColor(ratio: number): string {
   if (ratio > 0.2) return 'var(--color-neon-warning)';
   return 'var(--color-neon-danger)';
 }
+
+/** Brand color palette — One Brand Color: Violet */
+export const COLOR = {
+  brand: '#8B5CF6',
+  brandLight: '#A78BFA',
+  brandDark: '#7C3AED',
+} as const;
