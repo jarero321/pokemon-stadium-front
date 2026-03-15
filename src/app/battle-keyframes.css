@@ -1,6 +1,7 @@
 /*
- * Battle UI — Clean Pokémon-game aesthetic
- * Keyframes, type selectors, component classes
+ * Battle UI — Stadium Midnight aesthetic
+ * Keyframes, pseudo-elements, data-attribute selectors,
+ * animation assignments, complex CSS that can't be Tailwind
  */
 
 /* ── Keyframes ─────────────────────────────────────────── */
@@ -29,10 +30,10 @@
 @keyframes turn-pulse-green {
   0%,
   100% {
-    box-shadow: 0 0 8px rgba(34, 197, 94, 0.15);
+    box-shadow: 0 0 8px rgba(16, 185, 129, 0.15);
   }
   50% {
-    box-shadow: 0 0 16px rgba(34, 197, 94, 0.3);
+    box-shadow: 0 0 16px rgba(16, 185, 129, 0.3);
   }
 }
 
@@ -151,14 +152,29 @@
 
 @keyframes confetti-fall {
   0% {
-    transform: translateY(-20px) translateX(0) rotate(0deg);
-    opacity: 0.9;
+    transform: translateY(-20px) translateX(0) rotate(0deg) scale(0);
+    opacity: 0;
   }
-  10% {
+  5% {
+    transform: translateY(0) translateX(0) rotate(0deg) scale(1.2);
     opacity: 1;
   }
+  10% {
+    transform: translateY(10px) translateX(calc(var(--confetti-wobble) * -0.3))
+      rotate(45deg) scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: translateY(50vh) translateX(var(--confetti-wobble))
+      rotate(calc(var(--confetti-rotation) * 0.5));
+    opacity: 0.9;
+  }
+  85% {
+    opacity: 0.5;
+  }
   100% {
-    transform: translateY(calc(100vh + 40px)) translateX(var(--confetti-wobble))
+    transform: translateY(calc(100vh + 40px))
+      translateX(calc(var(--confetti-wobble) * -0.6))
       rotate(var(--confetti-rotation));
     opacity: 0;
   }
@@ -170,7 +186,7 @@
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
   }
   50% {
-    box-shadow: 0 1px 8px rgba(59, 130, 246, 0.2);
+    box-shadow: 0 1px 8px rgba(6, 182, 212, 0.2);
   }
 }
 
@@ -184,15 +200,7 @@
   }
 }
 
-/* ── Info Panel ── */
-
-.info-panel {
-  position: relative;
-  background: #1e293b;
-  border: 1px solid #334155;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-}
+/* ── Info Panel pseudo-element (::before accent bar) ── */
 
 .info-panel::before {
   content: '';
@@ -202,58 +210,14 @@
   bottom: 0;
   width: 3px;
   border-radius: 8px 0 0 8px;
-  background: var(--panel-accent, var(--color-neon-player));
-}
-
-.info-panel--player {
-  --panel-accent: var(--color-neon-player);
-}
-
-.info-panel--opponent {
-  --panel-accent: var(--color-neon-opponent);
-}
-
-/* ── HP bar fill + ghost ── */
-
-.info-panel__hp-ghost {
-  position: absolute;
-  inset: 0 auto 0 0;
-  border-radius: 99px;
-  background: rgba(255, 255, 255, 0.12);
-  transition: width var(--t-ghost-slide) ease-out;
-}
-
-.info-panel__hp-fill {
-  position: absolute;
-  inset: 0 auto 0 0;
-  border-radius: 99px;
-  background: var(--hp-color, var(--color-neon-safe));
-  transition:
-    width var(--t-hp-fill) var(--ease-snappy),
-    background-color var(--t-blaze);
+  background: var(--panel-accent, #8b5cf6);
 }
 
 .info-panel__hp-fill::after {
   display: none;
 }
 
-.info-panel__hp-label {
-  font-size: 9px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  color: var(--hp-color, var(--color-neon-safe));
-  transition: color 400ms;
-}
-
-/* ── Stat micro-bar ── */
-
-.info-panel__stat-bar {
-  width: 100%;
-  height: 2px;
-  border-radius: 99px;
-  background: #334155;
-  overflow: hidden;
-}
+/* ── Info Panel stat-bar pseudo-element ── */
 
 .info-panel__stat-bar::after {
   content: '';
@@ -261,10 +225,10 @@
   height: 100%;
   width: var(--stat-pct, 50%);
   border-radius: 99px;
-  background: #64748b;
+  background: #2a3a5c;
 }
 
-/* ── Type Badge ── */
+/* ── Type Badge (data-attribute selectors) ── */
 
 .type-badge {
   display: inline-flex;
@@ -350,7 +314,7 @@
   color: #1a1a2e;
 }
 
-/* ── Platform ── */
+/* ── Platform (complex radial gradients with animation) ── */
 
 .platform__ellipse {
   position: absolute;
@@ -371,81 +335,33 @@
   border-radius: 50%;
   background: radial-gradient(
     ellipse at center,
-    color-mix(
-        in srgb,
-        var(--platform-glow, var(--color-neon-player)) 20%,
-        transparent
-      )
-      0%,
-    color-mix(
-        in srgb,
-        var(--platform-glow, var(--color-neon-player)) 6%,
-        transparent
-      )
-      50%,
+    color-mix(in srgb, var(--platform-glow, #8b5cf6) 20%, transparent) 0%,
+    color-mix(in srgb, var(--platform-glow, #8b5cf6) 6%, transparent) 50%,
     transparent 100%
   );
   animation: platform-pulse var(--t-platform-pulse) ease-in-out infinite;
   pointer-events: none;
 }
 
-/* ── Pokemon Card ── */
-
-.pokemon-card {
-  position: relative;
-  border-radius: 12px;
-  padding: 16px;
-  background: #1e293b;
-  border: 2px solid var(--card-border, #334155);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-  overflow: hidden;
-  transition: border-color 300ms;
-}
+/* ── Pokemon Card pseudo-element ── */
 
 .pokemon-card::before {
   display: none;
 }
 
-.pokemon-card--player {
-  --card-border: var(--color-neon-player);
-}
-.pokemon-card--opponent {
-  --card-border: var(--color-neon-opponent);
-}
-
-/* ── Battle Btn ── */
-
-.battle-btn {
-  position: relative;
-  width: 100%;
-  padding: 12px 20px;
-  border-radius: 8px;
-  font-weight: 700;
-  font-size: 14px;
-  color: #fff;
-  cursor: pointer;
-  overflow: hidden;
-  transition:
-    transform var(--t-micro),
-    background var(--t-fast),
-    box-shadow var(--t-fast);
-  border: none;
-}
-
-.battle-btn--attack {
-  background: #ef4444;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-}
+/* ── Battle Btn (pseudo-elements + state selectors) ── */
 
 .battle-btn--attack:not(:disabled):hover {
-  background: #dc2626;
+  background: linear-gradient(135deg, #fb7185, #f43f5e);
   transform: translateY(-1px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  box-shadow:
+    0 6px 16px rgba(244, 63, 94, 0.35),
+    0 1px 0 rgba(255, 255, 255, 0.1) inset;
 }
 
 .battle-btn--attack:not(:disabled):active {
   transform: translateY(0);
-  background: #b91c1c;
+  background: linear-gradient(135deg, #e11d48, #be123c);
 }
 
 .battle-btn:disabled {
@@ -457,29 +373,7 @@
   display: none;
 }
 
-/* ── Battle Action Btn ── */
-
-.battle-action-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0 20px;
-  height: 46px;
-  border-radius: 8px;
-  position: relative;
-  overflow: hidden;
-  cursor: pointer;
-  font-size: 14px;
-  font-weight: 700;
-  color: #fff;
-  background: var(--btn-color, #374151);
-  border: none;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  transition:
-    transform var(--t-micro),
-    background var(--t-fast),
-    box-shadow var(--t-fast);
-}
+/* ── Battle Action Btn (pseudo-elements + state selectors) ── */
 
 .battle-action-btn::before {
   display: none;
@@ -490,7 +384,9 @@
 
 .battle-action-btn:hover:not(:disabled) {
   transform: translateY(-1px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  box-shadow:
+    0 6px 16px rgba(0, 0, 0, 0.4),
+    0 1px 0 rgba(255, 255, 255, 0.08) inset;
   filter: brightness(1.1);
 }
 
@@ -504,40 +400,15 @@
   cursor: not-allowed;
 }
 
-.battle-action-btn--fight {
-  --btn-color: #ef4444;
-}
-.battle-action-btn--pokemon {
-  --btn-color: #3b82f6;
-}
-
 .battle-action-btn:not(:disabled) {
-  background: var(--btn-color, #374151);
+  background: var(--btn-color, #1e2940);
 }
 
 .battle-action-btn:active:not(:disabled) {
-  background: var(--btn-color, #374151);
+  background: var(--btn-color, #1e2940);
 }
 
-/* ── Move Cell ── */
-
-.move-cell {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 2px;
-  padding: 8px 8px 6px;
-  border-radius: 8px;
-  cursor: pointer;
-  position: relative;
-  overflow: hidden;
-  text-align: left;
-  background: color-mix(in srgb, var(--move-type-color) 12%, #1e293b);
-  border: 1px solid color-mix(in srgb, var(--move-type-color) 30%, transparent);
-  transition:
-    transform var(--t-micro),
-    border-color var(--t-fast);
-}
+/* ── Move Cell (pseudo-elements + state selectors) ── */
 
 .move-cell::before {
   content: '';
@@ -558,50 +429,11 @@
   transform: translateY(0);
 }
 
-.move-cell--disabled {
-  --move-type-color: #475569;
-  opacity: 0.3;
-  cursor: not-allowed;
-}
-
 .move-cell--disabled::before {
   opacity: 0;
 }
 
-.move-cell--selected {
-  border-color: var(--move-type-color);
-  cursor: wait;
-}
-
-.move-cell__name {
-  font-size: 11px;
-  font-weight: 700;
-  text-transform: uppercase;
-  color: #f1f5f9;
-}
-
-/* ── Status Badge ── */
-
-.status-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 3px;
-  padding: 1px 5px;
-  border-radius: 4px;
-  font-size: 8px;
-  font-weight: 800;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--status-color);
-  pointer-events: none;
-  background: color-mix(in srgb, var(--status-color) 15%, #1e293b);
-  border: 1px solid color-mix(in srgb, var(--status-color) 35%, transparent);
-}
-
-.status-badge__icon {
-  font-size: 10px;
-  line-height: 1;
-}
+/* ── Status Badge animation variants ── */
 
 .status-badge--psn {
   animation: status-psn-pulse 2s ease-in-out infinite;
@@ -632,27 +464,7 @@
   background-size: 200% 100%;
 }
 
-/* ── Weather ── */
-
-.weather-indicator {
-  position: absolute;
-  top: 8px;
-  right: 8px;
-  z-index: 3;
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  padding: 3px 10px 3px 7px;
-  border-radius: 6px;
-  pointer-events: none;
-  background: #1e293b;
-  border: 1px solid color-mix(in srgb, var(--weather-color) 30%, #334155);
-  font-size: 10px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--weather-color);
-}
+/* ── Weather animation variants ── */
 
 .weather-indicator--rain {
   animation: weather-rain-pulse 2.2s ease-in-out infinite;
@@ -677,6 +489,8 @@
   background-size: 200% 100%;
 }
 
+/* ── Arena weather tint (CSS custom property) ── */
+
 .arena-weather-tint {
   position: absolute;
   inset: 0;
@@ -686,13 +500,13 @@
   background: color-mix(in srgb, var(--weather-color) 6%, transparent);
 }
 
-/* ── Message Box ── */
+/* ── Message Box (animation references) ── */
 
 .battle-msg-box__cursor {
   display: inline-block;
   width: 2px;
   height: 1em;
-  background: #f1f5f9;
+  background: #8b5cf6;
   margin-left: 2px;
   vertical-align: text-bottom;
   animation: msg-cursor-blink 530ms step-end infinite;
@@ -707,33 +521,13 @@
   animation: msg-advance-bounce 800ms ease-in-out infinite;
 }
 
-/* ── Battle HUD ── */
-
-.battle-hud {
-  position: relative;
-  display: grid;
-  grid-template-columns: 1fr 2px auto;
-  grid-template-rows: auto 1fr;
-  border: 2px solid #334155;
-  border-radius: 10px;
-  background: #111827;
-  overflow: hidden;
-  min-height: 100px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-  transition: border-color 300ms;
-}
+/* ── Battle HUD pseudo-element ── */
 
 .battle-hud::after {
   display: none;
 }
 
-.battle-hud__divider {
-  width: 100%;
-  height: 100%;
-  background: #334155;
-}
-
-/* ── Confetti ── */
+/* ── Confetti (CSS custom property consumption) ── */
 
 .confetti-particle {
   position: absolute;
@@ -742,10 +536,11 @@
   width: var(--confetti-size);
   height: var(--confetti-height);
   background: var(--confetti-color);
-  border-radius: 2px;
-  animation: confetti-fall var(--confetti-duration) linear var(--confetti-delay)
-    1 forwards;
+  box-shadow: 0 0 3px color-mix(in srgb, var(--confetti-color) 40%, transparent);
+  animation: confetti-fall var(--confetti-duration)
+    cubic-bezier(0.25, 0.46, 0.45, 0.94) var(--confetti-delay) 1 forwards;
   opacity: 0;
+  will-change: transform, opacity;
 }
 
 /* ── Accessibility ── */
