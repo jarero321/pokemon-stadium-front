@@ -42,6 +42,8 @@ export const es: Dictionary = {
     totalBattles: '{{count}} batallas totales',
     charRules:
       '1-20 caracteres. Letras, números, espacios, guiones, guiones bajos.',
+    activeSessionWarning:
+      'Este entrenador ya está registrado. Si hay otra sesión activa, no podrás unirte al lobby.',
   },
   lobby: {
     title: 'Sala',
@@ -53,6 +55,11 @@ export const es: Dictionary = {
     noTeam: 'Sin equipo',
     nPokemon: '{{count}} Pokémon',
     shareUrl: '¡Comparte la URL del servidor con un amigo!',
+    leave: 'Salir del Lobby',
+    matchmaking: 'Buscando partida...',
+    stepCreating: 'Sala creada',
+    stepWaiting: 'Esperando oponente',
+    stepAssigning: 'Asignando equipos',
   },
   ready: {
     title: 'Prepararse',
@@ -92,6 +99,8 @@ export const es: Dictionary = {
     noLeft: '¡sin Pokémon restantes!',
     battleEnded: '¡Batalla terminada — {{winner}} gana!',
     wins: '¡{{name}} gana!',
+    surrender: 'Rendirse',
+    actions: 'Acciones de batalla',
     tips: [
       'Las ventajas de tipo hacen 1.5x de daño — ¡aprovéchalas!',
       'Cambiar de Pokémon cuesta tu turno. Que valga la pena.',

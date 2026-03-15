@@ -34,6 +34,7 @@ export interface Dictionary {
     newTrainer: string;
     joinBattle: string;
     useDifferent: string;
+    activeSessionWarning: string;
     wins: string;
     losses: string;
     winRate: string;
@@ -50,6 +51,11 @@ export interface Dictionary {
     noTeam: string;
     nPokemon: string;
     shareUrl: string;
+    leave: string;
+    matchmaking: string;
+    stepCreating: string;
+    stepWaiting: string;
+    stepAssigning: string;
   };
   ready: {
     title: string;
@@ -83,6 +89,8 @@ export interface Dictionary {
     noLeft: string;
     battleEnded: string;
     wins: string;
+    surrender: string;
+    actions: string;
     tips: string[];
   };
   result: {
