@@ -40,7 +40,7 @@ export function BattleArena({
   const bg = useMemo(() => background ?? getRandomBackground(), [background]);
 
   return (
-    <div className="battle-arena">
+    <div className="battle-arena" role="region" aria-label="Battle arena">
       {/* Background image */}
       <div
         className="battle-arena__bg"
@@ -72,7 +72,7 @@ export function BattleArena({
                 key={opponentPokemon.name}
                 name={opponentPokemon.name}
                 back={false}
-                size={128}
+                size={176}
                 animation={opponentAnimation}
                 animationKey={opponentAnimKey}
                 onAnimationEnd={onOpponentAnimationEnd}
@@ -80,7 +80,7 @@ export function BattleArena({
               <Platform
                 variant="opponent"
                 typeName={opponentPokemon.types[0]}
-                width={170}
+                width={220}
               />
               {/* Attack effect on opponent — uses player's types */}
               {playerPokemon && (
@@ -106,7 +106,7 @@ export function BattleArena({
                 key={playerPokemon.name}
                 name={playerPokemon.name}
                 back={true}
-                size={150}
+                size={288}
                 animation={playerAnimation}
                 animationKey={playerAnimKey}
                 onAnimationEnd={onPlayerAnimationEnd}
@@ -114,7 +114,7 @@ export function BattleArena({
               <Platform
                 variant="player"
                 typeName={playerPokemon.types[0]}
-                width={200}
+                width={360}
               />
               {/* Attack effect on player — uses opponent's types */}
               {opponentPokemon && (

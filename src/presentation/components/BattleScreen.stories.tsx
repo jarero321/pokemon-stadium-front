@@ -6,7 +6,6 @@ import {
   CHARIZARD,
   GENGAR,
   DRAGONITE,
-  BATTLE_EVENTS,
 } from './__fixtures__/screenData';
 
 const meta: Meta<typeof BattleScreenView> = {
@@ -25,12 +24,14 @@ const baseArgs = {
   myNickname: 'Ash',
   pendingAction: null,
   lastTurn: null,
-  events: [],
   forcedSwitchPending: false,
   notYourTurnCount: 0,
   onAttack: noop,
   onSwitchPokemon: noop,
   onForcedSwitch: noop,
+  onSurrender: noop,
+  turnTimer: null,
+  lastSwitch: null,
 };
 
 export const MyTurn: Story = {
@@ -74,28 +75,6 @@ export const LowHp: Story = {
     },
     opponent: OPPONENT,
     isMyTurn: true,
-  },
-};
-
-export const WithEvents: Story = {
-  args: {
-    ...baseArgs,
-    myPlayer: {
-      ...MY_PLAYER,
-      team: [{ ...CHARIZARD, hp: 90 }, GENGAR, DRAGONITE],
-    },
-    opponent: {
-      ...OPPONENT,
-      team: [
-        { ...OPPONENT.team[0], hp: 120 },
-        OPPONENT.team[1],
-        OPPONENT.team[2],
-      ],
-    },
-    isMyTurn: true,
-    events: BATTLE_EVENTS,
-    lastTurn:
-      BATTLE_EVENTS[2].type === 'turn_result' ? BATTLE_EVENTS[2].data : null,
   },
 };
 

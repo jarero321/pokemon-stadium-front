@@ -1,10 +1,16 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { useConnectionStore, useBattleStore } from '@/application/stores';
 import { useGame } from '@/presentation/providers/GameProvider';
-import { useBattle } from '@/application/hooks';
+import {
+  useBattle,
+  useBattleAnimation,
+  useCountdown,
+  useLeaveGame,
+} from '@/application/hooks';
 import { BattleScreenView } from './BattleScreenView';
+import { TURN_TIMEOUT_SECONDS } from '@/domain/constants';
 
 export function BattleScreen() {
   const status = useConnectionStore((s) => s.status);
@@ -14,49 +20,111 @@ export function BattleScreen() {
   const setForcedSwitchPending = useBattleStore(
     (s) => s.setForcedSwitchPending,
   );
+  const animating = useBattleStore((s) => s.animating);
   const { socketClient } = useGame();
+  const leaveGame = useLeaveGame();
   const {
     myPlayer,
     opponent,
     isMyTurn,
     lastTurn,
-    events,
+    lastSwitch,
     attack,
     switchPokemon,
   } = useBattle(socketClient);
 
   const [notYourTurnCount, setNotYourTurnCount] = useState(0);
 
+  // Auto-attack when turn timer expires
+  const handleTimerExpire = useCallback(() => {
+    if (isMyTurn && !pendingAction && !animating) {
+      attack();
+    }
+  }, [isMyTurn, pendingAction, animating, attack]);
+
+  const turnTimer = useCountdown({
+    seconds: TURN_TIMEOUT_SECONDS,
+    onExpire: handleTimerExpire,
+  });
+
+  // Start/stop timer based on turn
+  useEffect(() => {
+    if (isMyTurn && !animating && !forcedSwitchPending) {
+      turnTimer.start();
+    } else {
+      turnTimer.stop();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isMyTurn, animating, forcedSwitchPending]);
+
   const handleAttack = useCallback(() => {
     if (!isMyTurn) {
       setNotYourTurnCount((c) => c + 1);
       return;
     }
+    turnTimer.stop();
     attack();
-  }, [isMyTurn, attack]);
+  }, [isMyTurn, attack, turnTimer]);
 
-  const handleForcedSwitch = (index: number) => {
-    if (index !== myPlayer?.activePokemonIndex) {
+  const handleSwitch = useCallback(
+    (index: number) => {
+      turnTimer.stop();
       switchPokemon(index);
-    }
-    setForcedSwitchPending(false);
-  };
+    },
+    [switchPokemon, turnTimer],
+  );
+
+  const handleForcedSwitch = useCallback(
+    (index: number) => {
+      if (index !== myPlayer?.activePokemonIndex) {
+        switchPokemon(index);
+      }
+      setForcedSwitchPending(false);
+    },
+    [myPlayer?.activePokemonIndex, switchPokemon, setForcedSwitchPending],
+  );
+
+  const animation = useBattleAnimation(
+    lastTurn,
+    lastSwitch,
+    nickname,
+    isMyTurn,
+    notYourTurnCount,
+  );
+
+  // Don't show forced switch if player has no alive alternatives
+  const hasAliveAlternatives =
+    myPlayer?.team?.some(
+      (p, i) => !p.defeated && i !== myPlayer.activePokemonIndex,
+    ) ?? false;
 
   return (
     <BattleScreenView
       status={status}
-      myNickname={nickname}
       myPlayer={myPlayer}
       opponent={opponent}
       isMyTurn={isMyTurn}
       pendingAction={pendingAction}
-      lastTurn={lastTurn}
-      events={events}
-      forcedSwitchPending={forcedSwitchPending}
-      notYourTurnCount={notYourTurnCount}
+      forcedSwitchPending={forcedSwitchPending && hasAliveAlternatives}
+      playerAnim={animation.playerAnim}
+      opponentAnim={animation.opponentAnim}
+      playerAnimKey={animation.playerAnimKey}
+      opponentAnimKey={animation.opponentAnimKey}
+      messages={animation.messages}
+      messageKey={animation.messageKey}
+      isAnimating={animation.isAnimating}
+      onPlayerAnimationEnd={animation.onPlayerAnimationEnd}
+      onOpponentAnimationEnd={animation.onOpponentAnimationEnd}
+      onMessageQueueComplete={animation.onMessageQueueComplete}
       onAttack={handleAttack}
-      onSwitchPokemon={switchPokemon}
+      onSwitchPokemon={handleSwitch}
       onForcedSwitch={handleForcedSwitch}
+      onSurrender={leaveGame}
+      turnTimer={
+        isMyTurn && !animating && turnTimer.active
+          ? { remaining: turnTimer.remaining, progress: turnTimer.progress }
+          : null
+      }
     />
   );
 }

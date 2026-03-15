@@ -36,11 +36,13 @@ export function BattleActionMenu({
     onSwitch?.(index);
     setShowTeam(false);
   };
-
-  /* ── Forced switch: full-width team selection ── */
   if (forcedSwitch) {
     return (
-      <div className="p-2.5 px-3.5 flex flex-col justify-center gap-1.5 min-w-[195px]">
+      <div
+        className="p-2.5 px-3.5 flex flex-col justify-center gap-1.5 min-w-[195px]"
+        role="listbox"
+        aria-label={t('battle.chooseNext')}
+      >
         <p className="text-[11px] font-black text-amber-400 uppercase tracking-[0.10em] text-center [text-shadow:0_0_8px_rgba(251,191,36,0.3)] animate-[switch-title-pulse_1.5s_ease-in-out_infinite]">
           {t('battle.chooseNext')}
         </p>
@@ -58,11 +60,13 @@ export function BattleActionMenu({
       </div>
     );
   }
-
-  /* ── Voluntary team selection ── */
   if (showTeam) {
     return (
-      <div className="p-2.5 px-3.5 flex flex-col justify-center gap-1.5 min-w-[195px]">
+      <div
+        className="p-2.5 px-3.5 flex flex-col justify-center gap-1.5 min-w-[195px]"
+        role="listbox"
+        aria-label={t('battle.pokemon')}
+      >
         <div className="flex flex-col gap-1">
           {team.map((p, i) => (
             <SwitchCard
@@ -77,20 +81,23 @@ export function BattleActionMenu({
         </div>
         <button
           onClick={() => setShowTeam(false)}
-          className="py-1.5 px-2.5 rounded-md text-[11px] font-extrabold text-white/40 bg-white/[0.03] border border-white/[0.06] cursor-pointer transition-all duration-150 text-center uppercase tracking-wide mt-0.5 hover:bg-white/[0.06] hover:text-white/60 hover:border-white/[0.12]"
+          className="py-1.5 px-2.5 rounded-md text-[11px] font-extrabold text-[#475569] bg-[#0f1420] border border-[#1e2940] cursor-pointer transition-all duration-150 text-center uppercase tracking-wide mt-0.5 hover:bg-[#161d2e] hover:text-[#94a3b8] hover:border-[#2a3a5c]"
         >
           {t('battle.back')}
         </button>
       </div>
     );
   }
-
-  /* ── Main menu: FIGHT / POKeMON ── */
   return (
-    <div className="p-2.5 px-3 flex flex-col justify-center gap-2 min-w-[165px]">
+    <div
+      className="p-2.5 px-3 flex flex-col justify-center gap-2 min-w-[165px]"
+      role="toolbar"
+      aria-label={t('battle.actions')}
+    >
       <button
         onClick={() => !disabled && onAttack?.()}
         disabled={disabled}
+        aria-label={t('battle.fight')}
         className="battle-action-btn battle-action-btn--fight"
       >
         {t('battle.fight')}
@@ -98,6 +105,7 @@ export function BattleActionMenu({
       <button
         onClick={() => !disabled && setShowTeam(true)}
         disabled={disabled}
+        aria-label={t('battle.pokemon')}
         className="battle-action-btn battle-action-btn--pokemon"
       >
         {t('battle.pokemon')}

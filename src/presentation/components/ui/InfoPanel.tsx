@@ -9,8 +9,6 @@ import { motion, useMotionValue, animate } from 'framer-motion';
 import { TypeBadge } from './TypeBadge';
 import { getHpColor, DURATION, EASE } from '@/lib/tokens';
 
-/* ── Types ─────────────────────────────────────────────────── */
-
 interface PokemonData {
   name: string;
   hp: number;
@@ -36,8 +34,6 @@ const STAT_MAX = { attack: 180, defense: 180, speed: 180 };
 function statPct(value: number, key: keyof typeof STAT_MAX): string {
   return `${Math.min(100, Math.round((value / STAT_MAX[key]) * 100))}%`;
 }
-
-/* ── Component ─────────────────────────────────────────────── */
 
 export function InfoPanel({
   pokemon,

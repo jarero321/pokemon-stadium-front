@@ -59,7 +59,7 @@ export function StatBar({
     >
       {/* Header */}
       <div className="flex items-baseline justify-between mb-1 pl-2">
-        <span className="text-[13px] font-extrabold tracking-wide text-slate-100 [text-shadow:0_0_12px_rgba(255,255,255,0.20)] uppercase">
+        <span className="text-[13px] font-extrabold tracking-wide text-[#e2e8f0] [text-shadow:0_0_12px_rgba(255,255,255,0.12)] uppercase">
           {name}
         </span>
       </div>
@@ -77,7 +77,7 @@ export function StatBar({
           HP
         </span>
         {isPlayer && (
-          <span className="text-[10px] font-semibold text-white/55 tabular-nums">
+          <span className="text-[10px] font-semibold text-[#475569] tabular-nums">
             {hp}/{maxHp}
           </span>
         )}
@@ -113,10 +113,10 @@ export function StatBar({
               key={s.label}
               className="flex flex-col items-center gap-px flex-1"
             >
-              <span className="text-[8px] font-bold tracking-widest text-white/[0.28] uppercase">
+              <span className="text-[8px] font-bold tracking-widest text-[#475569] uppercase">
                 {s.label}
               </span>
-              <span className="text-[11px] font-extrabold text-white/70 tabular-nums">
+              <span className="text-[11px] font-extrabold text-[#94a3b8] tabular-nums">
                 {s.value}
               </span>
               <div

@@ -9,8 +9,6 @@
 
 import React from 'react';
 
-/* ── Icon map ──────────────────────────────────────────────── */
-
 const TYPE_ICONS: Record<string, string> = {
   fire: '🔥',
   water: '💧',
@@ -31,8 +29,6 @@ const TYPE_ICONS: Record<string, string> = {
   normal: '⭐',
   flying: '🌪️',
 };
-
-/* ── Component ─────────────────────────────────────────────── */
 
 interface TypeBadgeProps {
   type: string;

@@ -10,8 +10,8 @@ export function TurnIndicator({ isMyTurn, children }: TurnIndicatorProps) {
     <div
       className={`inline-flex items-center gap-2 py-1.5 px-4 rounded-full text-xs font-bold tracking-wide backdrop-blur-[8px] border transition-all duration-300 ${
         isMyTurn
-          ? 'bg-green-400/[0.12] border-green-400/30 text-green-400 shadow-[0_0_16px_rgba(74,222,128,0.20)] animate-[turn-pulse-green_2s_ease-in-out_infinite]'
-          : 'bg-yellow-400/10 border-yellow-400/25 text-yellow-400 shadow-[0_0_12px_rgba(250,204,21,0.15)]'
+          ? 'bg-violet-500/10 border-violet-500/20 text-violet-400 shadow-[0_0_16px_rgba(139,92,246,0.18)] animate-[turn-pulse-green_2s_ease-in-out_infinite]'
+          : 'bg-[#0f1420] border-[#1e2940] text-[#475569]'
       }`}
     >
       <span

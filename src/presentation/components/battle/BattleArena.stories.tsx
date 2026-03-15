@@ -24,8 +24,6 @@ const meta: Meta<typeof BattleArena> = {
 
 export default meta;
 
-/* ── 1. Battle Start ── */
-
 export const BattleStart = {
   name: '1. Battle Start',
   render: () => {
@@ -61,8 +59,6 @@ export const BattleStart = {
     );
   },
 };
-
-/* ── 2. Attack Exchange (Auto) ── */
 
 export const AttackExchange = {
   name: '2. Attack Exchange (Auto)',
@@ -166,8 +162,6 @@ export const AttackExchange = {
     );
   },
 };
-
-/* ── 3. KO + Switch ── */
 
 export const KOAndSwitch = {
   name: '3. KO + Switch',
@@ -282,8 +276,6 @@ export const KOAndSwitch = {
   },
 };
 
-/* ── 4. Background Gallery ── */
-
 export const BackgroundGallery = {
   name: '4. Background Gallery',
   render: () => {
@@ -337,8 +329,6 @@ export const BackgroundGallery = {
     );
   },
 };
-
-/* ── 5. Interactive Battle ── */
 
 export const InteractiveBattle = {
   name: '5. Interactive Battle',

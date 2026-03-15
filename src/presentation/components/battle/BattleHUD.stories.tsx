@@ -14,8 +14,6 @@ import {
 import { BattleLog, BattleLogEntry } from './BattleLog';
 import { TurnIndicator } from './TurnIndicator';
 
-/* ── Meta ─────────────────────────────────────────────── */
-
 const meta: Meta = {
   title: 'Battle/BattleHUD',
   parameters: { layout: 'padded' },
@@ -31,8 +29,6 @@ const meta: Meta = {
 };
 
 export default meta;
-
-/* ── 1. Message Box Demo ── */
 
 export const MessageBoxDemo = {
   name: '1. Message Box Demo',
@@ -131,8 +127,6 @@ export const MessageBoxDemo = {
   },
 };
 
-/* ── 2. Action Menu States ── */
-
 export const ActionMenuStates = {
   name: '2. Action Menu States',
   render: () => {
@@ -228,8 +222,6 @@ export const ActionMenuStates = {
   },
 };
 
-/* ── 3. Immersive Battle ── */
-
 interface BattleState {
   pTeam: typeof TEAMS.player;
   oTeam: typeof TEAMS.opponent;
@@ -240,7 +232,6 @@ interface BattleState {
 export const ImmersiveBattle = {
   name: '3. Immersive Battle',
   render: () => {
-    /* ── state ── */
     const [battle, setBattle] = useState<BattleState>({
       pTeam: TEAMS.player.map((p) => ({ ...p })),
       oTeam: TEAMS.opponent.map((p) => ({ ...p })),
@@ -272,8 +263,6 @@ export const ImmersiveBattle = {
       types: p.types,
       defeated: p.hp <= 0,
     }));
-
-    /* ── FIGHT ── */
     const handleAttack = useCallback(() => {
       if (phase !== 'idle' || pActive.hp <= 0 || oActive.hp <= 0) return;
 
@@ -357,8 +346,6 @@ export const ImmersiveBattle = {
       setMessages(msgs);
       setMsgKey((k) => k + 1);
     }, [phase, pActive, oActive, battle]);
-
-    /* ── Opponent counter-attack ── */
     const doOpponentAttack = useCallback(() => {
       const currentO = battle.oTeam[battle.oIdx];
       const currentP = battle.pTeam[battle.pIdx];
@@ -429,8 +416,6 @@ export const ImmersiveBattle = {
       setMessages(msgs);
       setMsgKey((k) => k + 1);
     }, [battle]);
-
-    /* ── Message queue complete handler ── */
     const handleQueueComplete = useCallback(() => {
       const nextPhase = phaseAfterMsgRef.current;
       if (nextPhase === 'opponent-atk') {
@@ -443,8 +428,6 @@ export const ImmersiveBattle = {
         }
       }
     }, [doOpponentAttack]);
-
-    /* ── Switch ── */
     const handleSwitch = useCallback(
       (index: number) => {
         if (index === battle.pIdx) return;
@@ -472,8 +455,6 @@ export const ImmersiveBattle = {
       },
       [battle, pActive, phase],
     );
-
-    /* ── Reset ── */
     const reset = () => {
       oAnimNextRef.current = null;
       pAnimNextRef.current = null;

@@ -26,8 +26,6 @@ interface PokemonSpriteProps {
   onAnimationEnd?: () => void;
 }
 
-/* ── Static animation configs (stable refs, no re-render restarts) ── */
-
 const ANIM_DAMAGE = {
   initial: { x: 0, opacity: 1 },
   animate: {

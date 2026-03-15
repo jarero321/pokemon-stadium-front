@@ -20,10 +20,10 @@ interface DamagePopupProps {
 }
 
 const VARIANT_COLORS: Record<DamageVariant, string> = {
-  normal: '#f1f5f9',
-  superEffective: 'var(--color-neon-warning)',
-  notEffective: '#93c5fd',
-  critical: '#fb923c',
+  normal: '#e2e8f0',
+  superEffective: '#34d399',
+  notEffective: '#fbbf24',
+  critical: '#fb7185',
 };
 
 function getDamageSize(damage: number, maxHp: number): number {
@@ -66,7 +66,7 @@ export function DamagePopup({ popups, onComplete }: DamagePopupProps) {
           >
             {popup.isCritical && (
               <motion.span
-                className="text-[10px] font-black tracking-[0.12em] uppercase text-orange-400 [text-shadow:0_0_8px_rgba(251,146,60,0.60)] mb-0.5"
+                className="text-[10px] font-black tracking-[0.12em] uppercase text-rose-400 [text-shadow:0_0_8px_rgba(251,113,133,0.70)] mb-0.5"
                 initial={{ scale: 0, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 transition={{

@@ -5,8 +5,6 @@
 
 import type { BattlePokemon } from '../types';
 
-/* ── Teams ─────────────────────────────────────────── */
-
 export const TEAMS: {
   player: BattlePokemon[];
   opponent: BattlePokemon[];
@@ -71,8 +69,6 @@ export const TEAMS: {
   ],
 };
 
-/* ── Type effectiveness ────────────────────────────── */
-
 export const TYPE_EFFECTIVENESS: Record<string, Record<string, number>> = {
   fire: {
     water: 0.5,
@@ -107,8 +103,6 @@ export const TYPE_EFFECTIVENESS: Record<string, Record<string, number>> = {
   },
   psychic: { fighting: 1.5, poison: 1.5, psychic: 0.5, dark: 0, steel: 0.5 },
 };
-
-/* ── Utility functions ─────────────────────────────── */
 
 export function getMultiplier(atkTypes: string[], defTypes: string[]): number {
   let mult = 1;
