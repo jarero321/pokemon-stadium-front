@@ -1,13 +1,16 @@
 'use client';
 
 import { useState, useCallback, useEffect, useMemo } from 'react';
-import { useConnectionStore, useBattleStore } from '@/application/stores';
+import {
+  useConnectionStore,
+  useBattleStore,
+  useLobbyStore,
+} from '@/application/stores';
 import { useGame } from '@/presentation/providers/GameProvider';
 import {
   useBattle,
   useBattleAnimation,
   useCountdown,
-  useLeaveGame,
 } from '@/application/hooks';
 import { BattleScreenView } from './BattleScreenView';
 import { TURN_TIMEOUT_SECONDS } from '@/domain/constants';
@@ -21,8 +24,7 @@ export function BattleScreen() {
     (s) => s.setForcedSwitchPending,
   );
   const animating = useBattleStore((s) => s.animating);
-  const { socketClient, httpClient, storage } = useGame();
-  const leaveGame = useLeaveGame(socketClient, httpClient, storage);
+  const { socketClient } = useGame();
   const {
     myPlayer,
     opponent,
@@ -87,6 +89,17 @@ export function BattleScreen() {
     [myPlayer?.activePokemonIndex, switchPokemon, setForcedSwitchPending],
   );
 
+  const handleSurrender = useCallback(() => {
+    const opponentName = useLobbyStore.getState().getOpponent()?.nickname ?? '';
+    const myName = useConnectionStore.getState().nickname ?? '';
+    // Show defeat screen locally before disconnecting
+    useBattleStore.getState().setBattleEnd({
+      winner: opponentName,
+      loser: myName,
+      reason: 'surrender',
+    });
+  }, []);
+
   const animation = useBattleAnimation(
     lastTurn,
     lastSwitch,
@@ -136,7 +149,7 @@ export function BattleScreen() {
       onAttack={handleAttack}
       onSwitchPokemon={handleSwitch}
       onForcedSwitch={handleForcedSwitch}
-      onSurrender={leaveGame}
+      onSurrender={handleSurrender}
       turnTimer={turnTimerProps}
     />
   );

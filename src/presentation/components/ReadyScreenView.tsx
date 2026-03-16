@@ -56,15 +56,17 @@ function PokemonCard({ pokemon }: { pokemon: PokemonStateDTO }) {
     <div
       className={`flex items-center gap-3 rounded-lg border border-[#1e2940] bg-[#0f1420] p-2.5 transition-colors hover:bg-[#161d2e] ${typeBorderClass(pokemon.type)}`}
     >
-      <Image
-        src={imgError ? staticSrc : animatedSrc}
-        alt={pokemon.name}
-        width={56}
-        height={56}
-        unoptimized
-        className="pixelated"
-        onError={() => setImgError(true)}
-      />
+      <div className="flex h-14 w-14 flex-shrink-0 items-center justify-center">
+        <Image
+          src={imgError ? staticSrc : animatedSrc}
+          alt={pokemon.name}
+          width={56}
+          height={56}
+          unoptimized
+          className="pixelated object-contain"
+          onError={() => setImgError(true)}
+        />
+      </div>
       <div className="flex min-w-0 flex-1 flex-col gap-0.5">
         <p className="truncate text-sm font-extrabold capitalize text-[#e2e8f0]">
           {pokemon.name}

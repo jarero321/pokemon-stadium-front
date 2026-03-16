@@ -116,6 +116,7 @@ export const es: Dictionary = {
     champion: '¡{{name}} es el Campeón Pokémon!',
     winsRound: '{{name}} gana esta ronda.',
     disconnected: 'El oponente se desconectó — ¡ganaste!',
+    surrendered: 'Te rendiste de la batalla.',
     turns: 'TURNOS',
     pokemonKod: 'POKEMON KO',
     damageDealt: 'DAÑO INFLIGIDO',

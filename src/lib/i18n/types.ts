@@ -100,6 +100,7 @@ export interface Dictionary {
     champion: string;
     winsRound: string;
     disconnected: string;
+    surrendered: string;
     turns: string;
     pokemonKod: string;
     damageDealt: string;
