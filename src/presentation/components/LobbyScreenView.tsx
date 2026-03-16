@@ -49,7 +49,7 @@ function StepIndicator({ steps }: { steps: MatchmakingStep[] }) {
     <div className="space-y-3">
       {steps.map((step, i) => (
         <motion.div
-          key={i}
+          key={step.label}
           initial={{ opacity: 0, x: -10 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: i * 0.12, ease: 'easeOut' }}

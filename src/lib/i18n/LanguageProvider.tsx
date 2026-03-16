@@ -1,12 +1,6 @@
 'use client';
 
-import {
-  createContext,
-  useContext,
-  useState,
-  useCallback,
-  useEffect,
-} from 'react';
+import { createContext, useContext, useState, useCallback } from 'react';
 import type { Dictionary, Locale } from './types';
 import { en } from './en';
 import { es } from './es';
@@ -60,11 +54,7 @@ function interpolate(
 }
 
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
-  const [locale, setLocaleState] = useState<Locale>('en');
-
-  useEffect(() => {
-    queueMicrotask(() => setLocaleState(detectLocale()));
-  }, []);
+  const [locale, setLocaleState] = useState<Locale>(detectLocale);
 
   const setLocale = useCallback((newLocale: Locale) => {
     setLocaleState(newLocale);

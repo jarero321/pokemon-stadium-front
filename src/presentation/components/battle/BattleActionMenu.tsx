@@ -49,7 +49,7 @@ export function BattleActionMenu({
         <div className="flex flex-col gap-1">
           {team.map((p, i) => (
             <SwitchCard
-              key={i}
+              key={p.name}
               pokemon={p}
               isActive={i === activePokemonIndex}
               canSelect={!p.defeated && i !== activePokemonIndex}
@@ -70,7 +70,7 @@ export function BattleActionMenu({
         <div className="flex flex-col gap-1">
           {team.map((p, i) => (
             <SwitchCard
-              key={i}
+              key={p.name}
               pokemon={p}
               isActive={i === activePokemonIndex}
               canSelect={!p.defeated && i !== activePokemonIndex && !disabled}

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useMemo } from 'react';
 import { useConnectionStore, useBattleStore } from '@/application/stores';
 import { useGame } from '@/presentation/providers/GameProvider';
 import {
@@ -95,6 +95,20 @@ export function BattleScreen() {
     notYourTurnCount,
   );
 
+  const turnTimerProps = useMemo(
+    () =>
+      isMyTurn && !animating && timerState.active
+        ? { remaining: timerState.remaining, progress: timerState.progress }
+        : null,
+    [
+      isMyTurn,
+      animating,
+      timerState.active,
+      timerState.remaining,
+      timerState.progress,
+    ],
+  );
+
   // Don't show forced switch if player has no alive alternatives
   const hasAliveAlternatives =
     myPlayer?.team?.some(
@@ -123,11 +137,7 @@ export function BattleScreen() {
       onSwitchPokemon={handleSwitch}
       onForcedSwitch={handleForcedSwitch}
       onSurrender={leaveGame}
-      turnTimer={
-        isMyTurn && !animating && timerState.active
-          ? { remaining: timerState.remaining, progress: timerState.progress }
-          : null
-      }
+      turnTimer={turnTimerProps}
     />
   );
 }

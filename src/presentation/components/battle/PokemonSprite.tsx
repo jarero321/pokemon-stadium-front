@@ -1,12 +1,6 @@
 'use client';
 
-import {
-  useState,
-  useEffect,
-  useLayoutEffect,
-  useCallback,
-  useRef,
-} from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import {
   motion,
   type TargetAndTransition,
@@ -140,8 +134,8 @@ export function PokemonSprite({
     setSpriteVisible(true);
   }, []);
 
-  // Pokeball + visibility setup — runs before paint to prevent flash
-  useLayoutEffect(() => {
+  // Pokeball + visibility setup — deferred to avoid cascading render
+  useEffect(() => {
     if (animation === 'entering') {
       queueMicrotask(() => {
         setSpriteVisible(false);
