@@ -38,30 +38,32 @@ export function NicknameScreenView({
       <div className="flex w-full max-w-3xl flex-col gap-6 md:flex-row md:items-start">
         {/* Left: Registration */}
         <div className="flex-1">
-          <div className="glass-panel rounded-2xl p-10">
+          <div className="glass-panel rounded-2xl p-8 sm:p-10">
             {/* Brand header */}
-            <div className="mb-8 text-center">
-              <h1 className="screen-title brand-gradient mb-2">
+            <div className="mb-6 text-center">
+              <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.15em] text-slate-500">
+                {t('nickname.subtitle')}
+              </p>
+              <h1 className="screen-title text-slate-100">
                 {t('nickname.title')}
               </h1>
-              <p className="screen-subtitle">{t('nickname.subtitle')}</p>
             </div>
 
             {/* Connection status */}
-            <div className="mb-5">
+            <div className="mb-4">
               <ConnectionDot status={status} />
             </div>
 
             {/* Connection error */}
             {connectionError && (
-              <div className="alert-banner alert-banner--error mb-5">
+              <div className="alert-banner alert-banner--error mb-4">
                 {connectionError}
               </div>
             )}
 
             {/* Registration form */}
             {!registerResult && (
-              <form onSubmit={onSubmit} className="space-y-5">
+              <form onSubmit={onSubmit} className="space-y-4">
                 <div>
                   <input
                     type="text"
@@ -69,9 +71,10 @@ export function NicknameScreenView({
                     onChange={(e) => onInputChange(e.target.value)}
                     placeholder={t('nickname.placeholder')}
                     maxLength={20}
+                    autoFocus
                     className="glass-input"
                   />
-                  <p className="mt-2 text-xs text-slate-500">
+                  <p className="mt-1.5 text-[11px] text-slate-500">
                     {t('nickname.charRules')}
                   </p>
                 </div>
@@ -94,52 +97,52 @@ export function NicknameScreenView({
 
             {/* Registration result */}
             {registerResult && (
-              <div className="space-y-5">
+              <div className="space-y-4">
                 {registerResult.isNewPlayer ? (
-                  <div className="alert-banner alert-banner--success">
-                    <p className="text-base font-bold">
+                  <div className="rounded-xl border border-emerald-500/20 bg-emerald-500/5 p-4 text-center">
+                    <p className="text-base font-bold text-emerald-400">
                       {t('nickname.welcome', {
                         name: registerResult.player.nickname,
                       })}
                     </p>
-                    <p className="mt-1 text-sm opacity-70">
+                    <p className="mt-1 text-sm text-slate-400">
                       {t('nickname.newTrainer')}
                     </p>
                   </div>
                 ) : (
-                  <div className="player-card player-card--self">
-                    <p className="mb-4 text-center text-xs font-bold uppercase tracking-widest text-violet-400">
+                  <div className="rounded-xl border border-[#243049] bg-[#0e1525] p-5">
+                    <p className="mb-4 text-center text-xs font-semibold uppercase tracking-widest text-violet-400">
                       {t('nickname.welcomeBack', {
                         name: registerResult.player.nickname,
                       })}
                     </p>
-                    <div className="grid grid-cols-3 gap-3 text-center">
-                      <div className="stat-block">
-                        <span className="stat-block__value text-emerald-400">
+                    <div className="grid grid-cols-3 gap-4 text-center">
+                      <div>
+                        <p className="text-xl font-bold tabular-nums text-emerald-400">
                           {registerResult.player.wins}
-                        </span>
-                        <span className="stat-block__label">
+                        </p>
+                        <p className="mt-0.5 text-[10px] font-semibold uppercase tracking-wider text-slate-500">
                           {t('nickname.wins')}
-                        </span>
+                        </p>
                       </div>
-                      <div className="stat-block">
-                        <span className="stat-block__value text-rose-400">
+                      <div>
+                        <p className="text-xl font-bold tabular-nums text-rose-400">
                           {registerResult.player.losses}
-                        </span>
-                        <span className="stat-block__label">
+                        </p>
+                        <p className="mt-0.5 text-[10px] font-semibold uppercase tracking-wider text-slate-500">
                           {t('nickname.losses')}
-                        </span>
+                        </p>
                       </div>
-                      <div className="stat-block">
-                        <span className="stat-block__value text-violet-400">
+                      <div>
+                        <p className="text-xl font-bold tabular-nums text-slate-200">
                           {(registerResult.player.winRate * 100).toFixed(0)}%
-                        </span>
-                        <span className="stat-block__label">
+                        </p>
+                        <p className="mt-0.5 text-[10px] font-semibold uppercase tracking-wider text-slate-500">
                           {t('nickname.winRate')}
-                        </span>
+                        </p>
                       </div>
                     </div>
-                    <p className="mt-3 text-center text-xs text-slate-500">
+                    <p className="mt-3 text-center text-[11px] text-slate-500">
                       {t('nickname.totalBattles', {
                         count: registerResult.player.totalBattles,
                       })}
