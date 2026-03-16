@@ -55,9 +55,15 @@ export function ResultScreen() {
 
   const handlePlayAgain = () => {
     resetBattle();
-    clearLobby(); // Keep myNickname, only clear lobby data
-    // Auto-rejoin in GameProvider handles join_lobby
-    // when lobby becomes null (no explicit join needed)
+    clearLobby();
+    // Reconnect socket if disconnected (e.g. after surrender)
+    if (!socketClient.isConnected()) {
+      const { baseUrl, token } = useConnectionStore.getState();
+      if (baseUrl && token) {
+        useConnectionStore.getState().setStatus('connecting');
+        socketClient.connect(baseUrl, token);
+      }
+    }
   };
 
   const handleExit = () => {
