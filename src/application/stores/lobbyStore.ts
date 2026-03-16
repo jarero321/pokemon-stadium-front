@@ -13,6 +13,7 @@ interface LobbyState {
   getOpponent: () => PlayerDTO | null;
   isMyTurn: () => boolean;
 
+  clearLobby: () => void;
   reset: () => void;
 }
 
@@ -48,5 +49,6 @@ export const useLobbyStore = create<LobbyState>((set, get) => ({
     return currentPlayer?.nickname === myNickname;
   },
 
+  clearLobby: () => set({ lobby: null }),
   reset: () => set(initialState),
 }));
