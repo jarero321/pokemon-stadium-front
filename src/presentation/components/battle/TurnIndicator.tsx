@@ -1,5 +1,3 @@
-'use client';
-
 interface TurnIndicatorProps {
   isMyTurn: boolean;
   children: React.ReactNode;

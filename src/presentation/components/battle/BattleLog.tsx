@@ -1,5 +1,3 @@
-'use client';
-
 interface BattleLogProps {
   title?: string;
   children: React.ReactNode;

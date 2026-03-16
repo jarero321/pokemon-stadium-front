@@ -1,14 +1,14 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Image from 'next/image';
 import type { ConnectionStatus } from '@/application/stores';
 import type { PlayerDTO, PokemonStateDTO } from '@/domain/dtos';
-import { AnimatePresence, motion } from 'framer-motion';
 import { useTranslation, useTips } from '@/lib/i18n';
 import { TypeBadge, TurnIndicator } from './battle';
 import { ConnectionDot } from './ui/ConnectionDot';
 import { CountdownRing } from './ui/CountdownRing';
+import { RotatingTips } from './ui/RotatingTips';
 
 export interface ReadyScreenViewProps {
   status: ConnectionStatus;
@@ -90,33 +90,6 @@ function PokemonCard({ pokemon }: { pokemon: PokemonStateDTO }) {
   );
 }
 
-function RotatingTips() {
-  const tips = useTips();
-  const [index, setIndex] = useState(0);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setIndex((i) => (i + 1) % tips.length);
-    }, 5000);
-    return () => clearInterval(interval);
-  }, [tips.length]);
-
-  return (
-    <AnimatePresence mode="wait">
-      <motion.p
-        key={index}
-        className="text-center text-xs text-[#475569]"
-        initial={{ opacity: 0, y: 6 }}
-        animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: -6 }}
-        transition={{ duration: 0.3, ease: 'easeInOut' }}
-      >
-        {tips[index]}
-      </motion.p>
-    </AnimatePresence>
-  );
-}
-
 export function ReadyScreenView({
   status,
   myPlayer,
@@ -127,6 +100,7 @@ export function ReadyScreenView({
   countdown,
 }: ReadyScreenViewProps) {
   const { t } = useTranslation();
+  const tips = useTips();
 
   const subtitle =
     isReady || isBothReady
@@ -235,7 +209,7 @@ export function ReadyScreenView({
 
         {/* Tips */}
         <div className="mx-auto mt-2 max-w-3xl">
-          <RotatingTips />
+          <RotatingTips tips={tips} />
         </div>
       </div>
     </div>
