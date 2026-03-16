@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useCallback } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import type { GameMessage } from '@/domain/dtos';
 
@@ -12,10 +12,10 @@ interface GameNotificationProps {
 }
 
 const TYPE_STYLES: Record<string, string> = {
-  info: 'border-violet-500/20 bg-violet-500/10 text-violet-300',
-  success: 'border-emerald-500/20 bg-emerald-500/10 text-emerald-300',
-  warning: 'border-amber-500/20 bg-amber-500/10 text-amber-300',
-  error: 'border-rose-500/20 bg-rose-500/10 text-rose-300',
+  info: 'border-slate-600/40 bg-slate-800/90 text-slate-300',
+  success: 'border-emerald-500/30 bg-slate-800/90 text-emerald-300',
+  warning: 'border-amber-500/30 bg-slate-800/90 text-amber-300',
+  error: 'border-rose-500/30 bg-slate-800/90 text-rose-300',
 };
 
 export function GameNotification({
@@ -23,7 +23,7 @@ export function GameNotification({
   onDismiss,
 }: GameNotificationProps) {
   return (
-    <div className="pointer-events-none fixed top-4 left-1/2 z-50 flex w-full max-w-sm -translate-x-1/2 flex-col items-center gap-2">
+    <div className="pointer-events-none fixed top-3 left-1/2 z-50 flex w-full max-w-xs -translate-x-1/2 flex-col items-center gap-1.5">
       <AnimatePresence>
         {messages.map((msg) => (
           <GameNotificationItem
@@ -50,7 +50,7 @@ function GameNotificationItem({
   );
 
   useEffect(() => {
-    const timer = setTimeout(dismiss, message.duration ?? 3000);
+    const timer = setTimeout(dismiss, message.duration ?? 2500);
     return () => clearTimeout(timer);
   }, [dismiss, message.duration]);
 
@@ -58,11 +58,11 @@ function GameNotificationItem({
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: -20, scale: 0.95 }}
-      animate={{ opacity: 1, y: 0, scale: 1 }}
-      exit={{ opacity: 0, y: -10, scale: 0.95 }}
-      transition={{ duration: 0.2 }}
-      className={`pointer-events-auto rounded-lg border px-4 py-2 text-center text-sm font-bold backdrop-blur-md ${style}`}
+      initial={{ opacity: 0, y: -12 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -8 }}
+      transition={{ duration: 0.15 }}
+      className={`pointer-events-auto rounded-md border px-3 py-1.5 text-center text-xs font-medium backdrop-blur-sm ${style}`}
     >
       {message.text}
     </motion.div>
