@@ -119,7 +119,7 @@ export function LobbyScreenView({
   ];
 
   return (
-    <div className="flex h-[100dvh] flex-col items-center justify-center p-4 bg-[#0a0f1e]">
+    <div className="flex h-[100dvh] flex-col items-center justify-center p-4 ">
       <div className="w-full max-w-sm space-y-8">
         {/* Connection warning */}
         {status !== 'connected' && (

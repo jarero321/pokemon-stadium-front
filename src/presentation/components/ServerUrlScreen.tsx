@@ -28,7 +28,7 @@ export function ServerUrlScreen({ onSubmit }: ServerUrlScreenProps) {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center p-4 bg-[#0a0f1e]">
+    <div className="flex min-h-screen items-center justify-center p-4 ">
       <div className="w-full max-w-md">
         <div className="glass-panel rounded-2xl p-10">
           {/* Header */}

@@ -34,7 +34,7 @@ export function NicknameScreenView({
   const isConnected = status === 'connected';
 
   return (
-    <div className="flex min-h-screen items-center justify-center p-4 bg-[#0a0f1e]">
+    <div className="flex min-h-screen items-center justify-center p-4 ">
       <div className="flex w-full max-w-3xl flex-col gap-6 md:flex-row md:items-start">
         {/* Left: Registration */}
         <div className="flex-1">
