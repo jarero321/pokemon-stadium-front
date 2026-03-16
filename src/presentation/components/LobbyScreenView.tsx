@@ -6,6 +6,7 @@ import type { PlayerDTO } from '@/domain/dtos';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useTranslation, useTips } from '@/lib/i18n';
 import { ConnectionDot } from './ui/ConnectionDot';
+import { RotatingTips } from './ui/RotatingTips';
 
 export interface LobbyScreenViewProps {
   status: ConnectionStatus;
@@ -83,33 +84,6 @@ function StepIndicator({ steps }: { steps: MatchmakingStep[] }) {
   );
 }
 
-function RotatingTips() {
-  const tips = useTips();
-  const [index, setIndex] = useState(0);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setIndex((i) => (i + 1) % tips.length);
-    }, 4000);
-    return () => clearInterval(interval);
-  }, [tips.length]);
-
-  return (
-    <AnimatePresence mode="wait">
-      <motion.p
-        key={index}
-        className="text-center text-xs text-[#475569]"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        transition={{ duration: 0.4, ease: 'easeInOut' }}
-      >
-        {tips[index]}
-      </motion.p>
-    </AnimatePresence>
-  );
-}
-
 export function LobbyScreenView({
   status,
   connectionError,
@@ -120,6 +94,7 @@ export function LobbyScreenView({
   onLeave,
 }: LobbyScreenViewProps) {
   const { t } = useTranslation();
+  const tips = useTips();
 
   const hasTeam = myPlayer?.team && myPlayer.team.length > 0;
   const opponentJoined = !waitingForOpponent;
@@ -206,7 +181,7 @@ export function LobbyScreenView({
         </div>
 
         {/* Tips */}
-        <RotatingTips />
+        <RotatingTips tips={tips} intervalMs={4000} />
 
         {/* Leave */}
         <button onClick={onLeave} className="ghost-btn w-full">
