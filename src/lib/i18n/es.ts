@@ -125,6 +125,16 @@ export const es: Dictionary = {
     winner: 'GANADOR',
     loser: 'PERDEDOR',
   },
+  leaderboard: {
+    title: 'Clasificación',
+    player: 'Jugador',
+    empty: 'Aún no hay batallas registradas.',
+    emptyHint: 'Sé el primer entrenador en competir.',
+    devMode: 'Modo Desarrollo',
+    failedLoad: 'Error al cargar clasificación',
+    noConnection: 'No se pudo conectar al servidor',
+    registrationFailed: 'Error en el registro',
+  },
   notifications: {
     connected: 'Conectado al servidor',
     disconnected: 'Desconectado del servidor',

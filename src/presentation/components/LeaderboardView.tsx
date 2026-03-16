@@ -1,4 +1,5 @@
 import type { PlayerStatsDTO } from '@/domain/dtos';
+import { useTranslation } from '@/lib/i18n';
 
 interface LeaderboardViewProps {
   players: PlayerStatsDTO[];
@@ -29,11 +30,13 @@ export function LeaderboardView({
   loading,
   error,
 }: LeaderboardViewProps) {
+  const { t } = useTranslation();
+
   const header = (
     <div className="mb-5 flex items-center gap-2">
       <span className="text-amber-400 text-base leading-none">&#9876;</span>
       <h3 className="text-sm font-bold uppercase tracking-widest text-slate-100">
-        Leaderboard
+        {t('leaderboard.title')}
       </h3>
     </div>
   );
@@ -72,10 +75,10 @@ export function LeaderboardView({
             &#9876;
           </div>
           <p className="text-center text-sm text-slate-500">
-            No battles recorded yet.
+            {t('leaderboard.empty')}
           </p>
           <p className="text-center text-xs text-slate-500/60">
-            Be the first trainer to compete.
+            {t('leaderboard.emptyHint')}
           </p>
         </div>
       </div>
@@ -89,10 +92,10 @@ export function LeaderboardView({
       {/* Column headers */}
       <div className="mb-2 grid grid-cols-[1.5rem_1fr_2.5rem_2.5rem_3.5rem] gap-2 px-2 text-[10px] font-semibold uppercase tracking-wider text-slate-500">
         <span>#</span>
-        <span>Player</span>
+        <span>{t('leaderboard.player')}</span>
         <span className="text-center">W</span>
         <span className="text-center">L</span>
-        <span className="text-right">Rate</span>
+        <span className="text-right">%</span>
       </div>
 
       <div className="space-y-1.5">
