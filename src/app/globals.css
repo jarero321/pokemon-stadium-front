@@ -237,7 +237,8 @@
 @media (min-width: 640px) {
   .battle-arena {
     aspect-ratio: 16 / 9;
-    flex: none;
+    flex: 1 1 auto;
+    max-height: calc(100dvh - 180px);
     border-radius: 16px;
     border: 2px solid #1e2940;
   }
