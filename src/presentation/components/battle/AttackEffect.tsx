@@ -503,8 +503,10 @@ export function AttackEffect({
     const picked =
       types[Math.floor(Math.random() * types.length)]?.toLowerCase() ??
       'normal';
-    setSelectedType(picked); // eslint-disable-line react-hooks/set-state-in-effect -- syncs trigger prop to playing state
-    setPlaying(true);
+    queueMicrotask(() => {
+      setSelectedType(picked);
+      setPlaying(true);
+    });
   }, [trigger, types]);
 
   const handleComplete = () => {

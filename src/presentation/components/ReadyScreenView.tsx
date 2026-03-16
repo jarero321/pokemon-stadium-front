@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Image from 'next/image';
 import type { ConnectionStatus } from '@/application/stores';
 import type { PlayerDTO, PokemonStateDTO } from '@/domain/dtos';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -55,12 +56,12 @@ function PokemonCard({ pokemon }: { pokemon: PokemonStateDTO }) {
     <div
       className={`flex items-center gap-3 rounded-lg border border-[#1e2940] bg-[#0f1420] p-2.5 transition-colors hover:bg-[#161d2e] ${typeBorderClass(pokemon.type)}`}
     >
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
+      <Image
         src={imgError ? staticSrc : animatedSrc}
         alt={pokemon.name}
         width={56}
         height={56}
+        unoptimized
         className="pixelated"
         onError={() => setImgError(true)}
       />

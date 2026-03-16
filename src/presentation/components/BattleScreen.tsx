@@ -42,7 +42,11 @@ export function BattleScreen() {
     }
   }, [isMyTurn, pendingAction, animating, attack]);
 
-  const turnTimer = useCountdown({
+  const {
+    start: startTimer,
+    stop: stopTimer,
+    ...timerState
+  } = useCountdown({
     seconds: TURN_TIMEOUT_SECONDS,
     onExpire: handleTimerExpire,
   });
@@ -50,28 +54,27 @@ export function BattleScreen() {
   // Start/stop timer based on turn
   useEffect(() => {
     if (isMyTurn && !animating && !forcedSwitchPending) {
-      turnTimer.start();
+      startTimer();
     } else {
-      turnTimer.stop();
+      stopTimer();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isMyTurn, animating, forcedSwitchPending]);
+  }, [isMyTurn, animating, forcedSwitchPending, startTimer, stopTimer]);
 
   const handleAttack = useCallback(() => {
     if (!isMyTurn) {
       setNotYourTurnCount((c) => c + 1);
       return;
     }
-    turnTimer.stop();
+    stopTimer();
     attack();
-  }, [isMyTurn, attack, turnTimer]);
+  }, [isMyTurn, attack, stopTimer]);
 
   const handleSwitch = useCallback(
     (index: number) => {
-      turnTimer.stop();
+      stopTimer();
       switchPokemon(index);
     },
-    [switchPokemon, turnTimer],
+    [switchPokemon, stopTimer],
   );
 
   const handleForcedSwitch = useCallback(
@@ -121,8 +124,8 @@ export function BattleScreen() {
       onForcedSwitch={handleForcedSwitch}
       onSurrender={leaveGame}
       turnTimer={
-        isMyTurn && !animating && turnTimer.active
-          ? { remaining: turnTimer.remaining, progress: turnTimer.progress }
+        isMyTurn && !animating && timerState.active
+          ? { remaining: timerState.remaining, progress: timerState.progress }
           : null
       }
     />
