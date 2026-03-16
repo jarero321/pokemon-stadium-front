@@ -30,17 +30,19 @@ const STORAGE_KEYS = {
   BASE_URL: 'pokemon-stadium-base-url',
 };
 
-const DEFAULT_API_URL =
-  process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8080';
+const IS_DEV = process.env.NODE_ENV === 'development';
+const PROD_API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8080';
 
 function resolveBaseUrl(storage: IStorage): string | null {
-  if (typeof window === 'undefined') return DEFAULT_API_URL;
+  if (typeof window === 'undefined') return IS_DEV ? null : PROD_API_URL;
 
   const stored = storage.get(STORAGE_KEYS.BASE_URL);
   if (stored) return stored;
 
-  // Per spec: "On first launch, the view must request the backend base URL"
-  // Show URL input screen until user sets it — works in both dev and prod
+  // Production: use build-time env var (CloudFront HTTPS URL)
+  if (!IS_DEV) return PROD_API_URL;
+
+  // Dev: show URL input screen for local backend IP
   return null;
 }
 
