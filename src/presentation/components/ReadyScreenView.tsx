@@ -112,7 +112,7 @@ export function ReadyScreenView({
         : t('ready.reviewTeam');
 
   return (
-    <div className="flex h-[100dvh] flex-col bg-[#0a0f1e]">
+    <div className="flex h-[100dvh] flex-col ">
       {/* Connection warning */}
       {status !== 'connected' && (
         <div className="px-4 pt-3">
@@ -187,7 +187,7 @@ export function ReadyScreenView({
       </div>
 
       {/* Sticky footer */}
-      <div className="border-t border-[#243049] bg-[#0a0f1e]/95 backdrop-blur-md px-4 py-3 safe-bottom">
+      <div className="border-t border-[#243049] bg-[#080d1a]/95 backdrop-blur-md px-4 py-3 safe-bottom">
         <div className="mx-auto flex w-full max-w-3xl items-center gap-3">
           {countdown && (
             <CountdownRing

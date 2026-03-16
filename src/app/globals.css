@@ -4,6 +4,24 @@
 @source '../../node_modules/@heroui/theme/dist/**/*.{js,ts,jsx,tsx}';
 @custom-variant dark (&:is(.dark *));
 
+/* ── App Background ───────────────────────────────────── */
+
+.app-bg {
+  background-color: #080d1a;
+  background-image:
+    radial-gradient(
+      ellipse 80% 50% at 50% 0%,
+      rgba(56, 71, 112, 0.15) 0%,
+      transparent 60%
+    ),
+    radial-gradient(
+      ellipse 60% 80% at 50% 100%,
+      rgba(15, 20, 40, 0.5) 0%,
+      transparent 50%
+    );
+  background-attachment: fixed;
+}
+
 /* ── Design Tokens ─────────────────────────────────────── */
 
 @theme {
