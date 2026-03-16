@@ -320,6 +320,37 @@ pnpm storybook
 | `pnpm format`    | Prettier                                    |
 | `pnpm storybook` | Documentación de componentes en puerto 6006 |
 
+## Deployment (AWS Amplify)
+
+El frontend se despliega automáticamente en **AWS Amplify Hosting** con soporte SSR (Next.js). La infraestructura se define en el repo del backend (`pokemon-stadium-api/infra/lib/frontend-stack.ts`) usando AWS CDK.
+
+### Cómo funciona
+
+```
+Push a main → Amplify detecta cambio → Build (pnpm build) → Deploy SSR
+```
+
+- **Build**: Amplify ejecuta `pnpm install --frozen-lockfile` + `pnpm build`
+- **Env vars**: `NEXT_PUBLIC_API_URL` se inyecta automáticamente desde CDK (apunta al ALB del backend)
+- **Cache**: `node_modules/` y `.next/cache/` se cachean entre builds
+- **SSR**: Next.js 16 App Router con server components y Turbopack
+
+### Configuración manual (sin CDK)
+
+Si prefieres deployar sin CDK, puedes usar Amplify directamente:
+
+1. Conectar el repo de GitHub en la consola de Amplify
+2. Framework: **Next.js - SSR**
+3. Build settings: usar el `buildSpec` del stack CDK
+4. Variable de entorno: `NEXT_PUBLIC_API_URL=https://tu-alb-dns.amazonaws.com`
+
+### CI/CD
+
+| Trigger          | Pipeline               | Acciones                           |
+| :--------------- | :--------------------- | :--------------------------------- |
+| Push a `develop` | GitHub Actions CI      | Typecheck, Lint, Unit Tests, Build |
+| Push a `main`    | AWS Amplify Auto-build | Build Next.js SSR + Deploy         |
+
 ## Licencia
 
 Este proyecto está licenciado bajo la Licencia MIT.
