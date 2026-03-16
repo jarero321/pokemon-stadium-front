@@ -109,6 +109,16 @@ export interface Dictionary {
     winner: string;
     loser: string;
   };
+  leaderboard: {
+    title: string;
+    player: string;
+    empty: string;
+    emptyHint: string;
+    devMode: string;
+    failedLoad: string;
+    noConnection: string;
+    registrationFailed: string;
+  };
   notifications: {
     connected: string;
     disconnected: string;

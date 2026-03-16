@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useConnectionStore } from '@/application/stores';
 import { useGame } from '@/presentation/providers/GameProvider';
+import { useTranslation } from '@/lib/i18n';
 import { LeaderboardPanel } from './LeaderboardPanel';
 import { NicknameScreenView } from './NicknameScreenView';
 import type { RegisterResponseDTO } from '@/domain/dtos';
@@ -11,6 +12,7 @@ const STORAGE_KEY = 'pokemon-stadium-nickname';
 const TOKEN_KEY = 'pokemon-stadium-token';
 
 export function NicknameScreen() {
+  const { t } = useTranslation();
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(() => {
@@ -44,7 +46,7 @@ export function NicknameScreen() {
       );
 
       if (!res.success) {
-        setError(res.error?.message ?? 'Registration failed');
+        setError(res.error?.message ?? t('leaderboard.registrationFailed'));
         return;
       }
 
@@ -55,7 +57,7 @@ export function NicknameScreen() {
         httpClient.setToken(res.data.token);
       }
     } catch {
-      setError('Could not connect to server');
+      setError(t('leaderboard.noConnection'));
     } finally {
       setLoading(false);
     }

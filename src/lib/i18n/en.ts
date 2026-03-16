@@ -125,6 +125,16 @@ export const en: Dictionary = {
     winner: 'WINNER',
     loser: 'LOSER',
   },
+  leaderboard: {
+    title: 'Leaderboard',
+    player: 'Player',
+    empty: 'No battles recorded yet.',
+    emptyHint: 'Be the first trainer to compete.',
+    devMode: 'Development Mode',
+    failedLoad: 'Failed to load leaderboard',
+    noConnection: 'Could not connect to server',
+    registrationFailed: 'Registration failed',
+  },
   notifications: {
     connected: 'Connected to server',
     disconnected: 'Disconnected from server',

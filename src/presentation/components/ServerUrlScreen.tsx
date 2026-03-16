@@ -43,7 +43,7 @@ export function ServerUrlScreen({ onSubmit }: ServerUrlScreenProps) {
           <div className="mb-6 flex justify-center">
             <span className="inline-flex items-center gap-1.5 rounded-full border border-amber-500/20 bg-amber-500/[0.06] px-3 py-1 text-[11px] font-semibold uppercase tracking-wider text-amber-400">
               <span className="h-1.5 w-1.5 rounded-full bg-amber-400" />
-              Development Mode
+              {t('leaderboard.devMode')}
             </span>
           </div>
 
