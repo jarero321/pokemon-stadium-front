@@ -64,10 +64,7 @@ export function BattleArena({
               maxHp={opponentPokemon.maxHp}
               variant="opponent"
             />
-            <div
-              className="battle-arena__sprite-stack"
-              style={{ position: 'relative' }}
-            >
+            <div className="battle-arena__sprite-stack relative">
               <PokemonSprite
                 key={opponentPokemon.name}
                 name={opponentPokemon.name}
@@ -98,10 +95,7 @@ export function BattleArena({
       <div className="battle-arena__player-zone">
         {playerPokemon && (
           <>
-            <div
-              className="battle-arena__sprite-stack"
-              style={{ position: 'relative' }}
-            >
+            <div className="battle-arena__sprite-stack relative">
               <PokemonSprite
                 key={playerPokemon.name}
                 name={playerPokemon.name}

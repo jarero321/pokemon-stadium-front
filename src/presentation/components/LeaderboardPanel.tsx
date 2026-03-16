@@ -12,7 +12,7 @@ export function LeaderboardPanel() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    let cancelled = false;
+    const controller = new AbortController();
 
     async function fetchLeaderboard() {
       setLoading(true);
@@ -23,7 +23,7 @@ export function LeaderboardPanel() {
           '/api/leaderboard?limit=10',
         );
 
-        if (cancelled) return;
+        if (controller.signal.aborted) return;
 
         if (res.success && res.data) {
           setPlayers(res.data);
@@ -31,20 +31,18 @@ export function LeaderboardPanel() {
           setError(res.error?.message ?? 'Failed to load leaderboard');
         }
       } catch {
-        if (!cancelled) {
+        if (!controller.signal.aborted) {
           setError('Could not connect to server');
         }
       } finally {
-        if (!cancelled) {
+        if (!controller.signal.aborted) {
           setLoading(false);
         }
       }
     }
 
     fetchLeaderboard();
-    return () => {
-      cancelled = true;
-    };
+    return () => controller.abort();
   }, [httpClient]);
 
   return <LeaderboardView players={players} loading={loading} error={error} />;

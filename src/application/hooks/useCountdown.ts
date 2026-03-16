@@ -20,7 +20,7 @@ export function useCountdown({
 
   useEffect(() => {
     onExpireRef.current = onExpire;
-  });
+  }, [onExpire]);
 
   const start = useCallback(() => {
     setRemaining(seconds);

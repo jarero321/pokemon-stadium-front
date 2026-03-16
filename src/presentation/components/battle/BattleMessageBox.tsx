@@ -84,8 +84,10 @@ export function BattleMessageBox({
   const fullText = currentMessage?.text ?? '';
   const isLastMessage = currentIndex >= messages.length - 1;
 
-  // Reset when messageKey changes (new queue)
+  // Reset when messageKey changes (new queue) — cancel running timers first
   useEffect(() => {
+    if (timerRef.current) clearTimeout(timerRef.current);
+    if (advanceRef.current) clearTimeout(advanceRef.current);
     queueMicrotask(() => {
       setCurrentIndex(0);
       setDisplayedChars(0);

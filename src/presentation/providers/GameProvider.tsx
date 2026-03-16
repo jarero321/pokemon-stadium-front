@@ -82,6 +82,11 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
     setBaseUrlState(url);
   };
 
+  const httpClientRef = useRef(httpClient);
+  useEffect(() => {
+    httpClientRef.current = httpClient;
+  }, [httpClient]);
+
   useEffect(() => {
     if (!baseUrl) return;
 
@@ -96,9 +101,9 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
 
     if (savedToken) {
       setToken(savedToken);
-      httpClient.setToken(savedToken);
+      httpClientRef.current.setToken(savedToken);
     }
-  }, [baseUrl, storage, setBaseUrl, setNickname, setToken, httpClient]);
+  }, [baseUrl, storage, setBaseUrl, setNickname, setToken]);
 
   const status = useConnectionStore((s) => s.status);
   const nickname = useConnectionStore((s) => s.nickname);
