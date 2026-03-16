@@ -7,6 +7,14 @@ export class SocketIOClient implements ISocketClient {
 
   connect(url: string, token?: string): void {
     if (this.socket?.connected) return;
+
+    // If socket exists but is disconnected, reconnect the same instance
+    // to preserve registered listeners
+    if (this.socket) {
+      this.socket.connect();
+      return;
+    }
+
     this.socket = io(url, {
       transports: ['websocket'],
       ...(token ? { auth: { token } } : {}),
@@ -25,7 +33,7 @@ export class SocketIOClient implements ISocketClient {
 
   disconnect(): void {
     this.socket?.disconnect();
-    this.socket = null;
+    // Keep the socket instance so listeners survive reconnection
   }
 
   emit(event: string, data?: unknown): void {
