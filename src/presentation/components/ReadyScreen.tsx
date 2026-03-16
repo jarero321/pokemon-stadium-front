@@ -10,9 +10,9 @@ import { READY_TIMEOUT_SECONDS } from '@/domain/constants';
 
 export function ReadyScreen() {
   const status = useConnectionStore((s) => s.status);
-  const { socketClient } = useGame();
+  const { socketClient, httpClient, storage } = useGame();
   const { lobby, myPlayer, opponent, markReady } = useLobby(socketClient);
-  const leaveGame = useLeaveGame();
+  const leaveGame = useLeaveGame(socketClient, httpClient, storage);
 
   const isReady = lobby?.status === LobbyStatus.READY;
   const isBothReady = !!(myPlayer?.ready && opponent?.ready);

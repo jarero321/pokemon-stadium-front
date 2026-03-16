@@ -10,15 +10,9 @@ import { getSpriteUrl } from './types';
 import { Pokeball } from './Pokeball';
 import type { PokeballState } from './Pokeball';
 import { DURATION, EASE } from '@/lib/tokens';
+import type { SpriteAnimation } from '@/domain/dtos';
 
-export type SpriteAnimation =
-  | 'idle'
-  | 'entering'
-  | 'damage'
-  | 'fainting'
-  | 'waiting'
-  | 'attacking'
-  | 'critical';
+export type { SpriteAnimation } from '@/domain/dtos';
 
 interface PokemonSpriteProps {
   name: string;

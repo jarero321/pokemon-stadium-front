@@ -2,19 +2,9 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useBattleTips } from '@/lib/i18n';
+import type { BattleMessage } from '@/domain/dtos';
 
-export interface BattleMessage {
-  text: string;
-  type?:
-    | 'normal'
-    | 'super-effective'
-    | 'not-effective'
-    | 'critical'
-    | 'ko'
-    | 'victory'
-    | 'defeat'
-    | 'info';
-}
+export type { BattleMessage } from '@/domain/dtos';
 
 interface BattleMessageBoxProps {
   messages: BattleMessage[];

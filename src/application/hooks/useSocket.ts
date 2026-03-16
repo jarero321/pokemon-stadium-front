@@ -144,7 +144,11 @@ export function useSocket(socketClient: ISocketClient) {
       useConnectionStore.getState().clearPendingAction();
 
       if (isSessionConflict(serverError.code)) {
-        // Nickname already has an active session — hard reset to register
+        // Nickname already has an active session — hard reset to register.
+        // Architecture note: direct localStorage/sessionStorage access here
+        // violates the IStorage port abstraction. Accepted as an emergency
+        // reset ("nuclear option") — threading IStorage through useSocket
+        // would require significant refactoring across many call sites.
         sessionConflictRef.current = true;
         if (typeof window !== 'undefined') {
           localStorage.removeItem('pokemon-stadium-nickname');

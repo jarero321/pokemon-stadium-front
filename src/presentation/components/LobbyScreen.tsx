@@ -9,10 +9,10 @@ import { LobbyScreenView } from './LobbyScreenView';
 export function LobbyScreen() {
   const status = useConnectionStore((s) => s.status);
   const connectionError = useConnectionStore((s) => s.error);
-  const { socketClient } = useGame();
+  const { socketClient, httpClient, storage } = useGame();
   const { lobby, myPlayer, opponent, nickname, assignPokemon } =
     useLobby(socketClient);
-  const leaveGame = useLeaveGame();
+  const leaveGame = useLeaveGame(socketClient, httpClient, storage);
 
   const hasAutoAssigned = useRef(false);
   const resetLobby = useLobbyStore((s) => s.reset);

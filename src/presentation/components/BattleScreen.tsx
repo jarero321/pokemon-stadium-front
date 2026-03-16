@@ -21,8 +21,8 @@ export function BattleScreen() {
     (s) => s.setForcedSwitchPending,
   );
   const animating = useBattleStore((s) => s.animating);
-  const { socketClient } = useGame();
-  const leaveGame = useLeaveGame();
+  const { socketClient, httpClient, storage } = useGame();
+  const leaveGame = useLeaveGame(socketClient, httpClient, storage);
   const {
     myPlayer,
     opponent,

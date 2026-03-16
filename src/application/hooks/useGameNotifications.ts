@@ -4,7 +4,7 @@ import { useState, useCallback, useEffect, useRef } from 'react';
 import { useConnectionStore, useLobbyStore } from '@/application/stores';
 import { classifyError, ErrorSeverity } from '@/domain/errors';
 import { useTranslation } from '@/lib/i18n';
-import type { GameMessage } from '@/presentation/components/ui/GameNotification';
+import type { GameMessage } from '@/domain/dtos';
 import type { LobbyDTO } from '@/domain/dtos';
 
 export function useGameNotifications() {

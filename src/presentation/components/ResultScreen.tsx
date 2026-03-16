@@ -6,6 +6,7 @@ import {
   useConnectionStore,
 } from '@/application/stores';
 import { useLeaveGame } from '@/application/hooks';
+import { useGame } from '@/presentation/providers/GameProvider';
 import { ResultScreenView } from './ResultScreenView';
 import type { TeamPokemon } from './battle/VictoryOverlay';
 
@@ -17,7 +18,8 @@ export function ResultScreen() {
   const nickname = useConnectionStore((s) => s.nickname);
   const resetBattle = useBattleStore((s) => s.reset);
   const clearLobby = useLobbyStore((s) => s.clearLobby);
-  const leaveGame = useLeaveGame();
+  const { socketClient, httpClient, storage } = useGame();
+  const leaveGame = useLeaveGame(socketClient, httpClient, storage);
 
   // Derived stats
   const totalTurns = events.filter((e) => e.type === 'turn_result').length;
