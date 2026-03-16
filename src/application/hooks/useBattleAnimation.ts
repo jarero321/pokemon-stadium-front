@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { TurnResultDTO, PokemonSwitchDTO } from '@/domain/dtos';
-import type { SpriteAnimation } from '@/presentation/components/battle';
-import type { BattleMessage } from '@/presentation/components/battle';
+import type { SpriteAnimation, BattleMessage } from '@/domain/dtos';
 import { useBattleStore } from '@/application/stores';
 import { useTranslation } from '@/lib/i18n';
 import { DURATION } from '@/lib/tokens';

@@ -6,11 +6,13 @@ import {
   useLobbyStore,
   useBattleStore,
 } from '@/application/stores';
-import { useGame } from '@/presentation/providers/GameProvider';
+import type { ISocketClient, IHttpClient, IStorage } from '@/application/ports';
 
-export function useLeaveGame() {
-  const { socketClient, storage, httpClient } = useGame();
-
+export function useLeaveGame(
+  socketClient: ISocketClient,
+  httpClient: IHttpClient,
+  storage: IStorage,
+) {
   const leave = useCallback(() => {
     socketClient.disconnect();
     useLobbyStore.getState().reset();

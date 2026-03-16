@@ -2,13 +2,9 @@
 
 import { useEffect, useState, useCallback } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
+import type { GameMessage } from '@/domain/dtos';
 
-export interface GameMessage {
-  id: string;
-  text: string;
-  type?: 'info' | 'success' | 'warning' | 'error';
-  duration?: number;
-}
+export type { GameMessage } from '@/domain/dtos';
 
 interface GameNotificationProps {
   messages: GameMessage[];

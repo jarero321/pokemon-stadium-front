@@ -10,3 +10,5 @@ export type {
 export type { ApiResponse } from './ApiResponse';
 
 export type { PlayerStatsDTO, RegisterResponseDTO } from './PlayerDTO';
+
+export type { SpriteAnimation, BattleMessage, GameMessage } from './UITypes';
