@@ -30,19 +30,17 @@ const STORAGE_KEYS = {
   BASE_URL: 'pokemon-stadium-base-url',
 };
 
-const IS_DEV = process.env.NODE_ENV === 'development';
-const PROD_API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8080';
+const DEFAULT_API_URL =
+  process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8080';
 
 function resolveBaseUrl(storage: IStorage): string | null {
-  if (typeof window === 'undefined') return PROD_API_URL;
+  if (typeof window === 'undefined') return DEFAULT_API_URL;
 
   const stored = storage.get(STORAGE_KEYS.BASE_URL);
   if (stored) return stored;
 
-  // In production, use the build-time env var
-  if (!IS_DEV) return PROD_API_URL;
-
-  // In dev, require explicit URL input
+  // Per spec: "On first launch, the view must request the backend base URL"
+  // Show URL input screen until user sets it — works in both dev and prod
   return null;
 }
 
