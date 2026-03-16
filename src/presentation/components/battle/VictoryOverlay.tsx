@@ -1,7 +1,8 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useCallback, useState } from 'react';
 import Image from 'next/image';
+import confetti from 'canvas-confetti';
 import {
   motion,
   AnimatePresence,
@@ -67,8 +68,7 @@ function AnimatedCounter({
   return <>{display}</>;
 }
 
-// Gold-dominant palette for victory celebration.
-// 3 golds + 1 violet (brand) + 1 emerald + 1 rose + 1 white = 7 distinct colors
+// Gold-dominant palette for victory celebration
 const CONFETTI_COLORS = [
   '#FBBF24', // amber-400 — gold primary
   '#FCD34D', // amber-300 — gold light
@@ -79,84 +79,85 @@ const CONFETTI_COLORS = [
   '#F1F5F9', // near-white — sparkle
 ];
 
-function seededValue(index: number, offset: number, range: number): number {
-  const hash = ((index * 2654435761 + offset * 40503) >>> 0) % 10000;
-  return (hash / 10000) * range;
-}
+function useVictoryConfetti(isVisible: boolean, isVictory: boolean) {
+  const fire = useCallback(() => {
+    // Center burst — big initial explosion
+    confetti({
+      particleCount: 80,
+      spread: 100,
+      origin: { y: 0.6 },
+      colors: CONFETTI_COLORS,
+      startVelocity: 45,
+      gravity: 0.8,
+      ticks: 300,
+      shapes: ['square', 'circle'],
+      scalar: 1.2,
+    });
 
-function generateParticles() {
-  // Two waves: burst (0-0.6s delay) + cascade (0.8-2.2s delay)
-  const TOTAL = 100;
-  const BURST = 60;
+    // Left cannon
+    setTimeout(() => {
+      confetti({
+        particleCount: 40,
+        angle: 60,
+        spread: 60,
+        origin: { x: 0, y: 0.65 },
+        colors: CONFETTI_COLORS,
+        startVelocity: 55,
+        gravity: 0.9,
+        ticks: 250,
+      });
+    }, 200);
 
-  return Array.from({ length: TOTAL }, (_, i) => {
-    const isBurst = i < BURST;
+    // Right cannon
+    setTimeout(() => {
+      confetti({
+        particleCount: 40,
+        angle: 120,
+        spread: 60,
+        origin: { x: 1, y: 0.65 },
+        colors: CONFETTI_COLORS,
+        startVelocity: 55,
+        gravity: 0.9,
+        ticks: 250,
+      });
+    }, 350);
 
-    // 5 shape types: square, tall rect, wide rect, circle, diamond
-    const shapeIndex = i % 5;
-    const borderRadius =
-      shapeIndex === 3
-        ? '50%' // circle
-        : shapeIndex === 4
-          ? '2px' // diamond (rotated square)
-          : '1px'; // rectangles
-    const extraRotation = shapeIndex === 4 ? 45 : 0;
+    // Second wave — rain from top
+    setTimeout(() => {
+      confetti({
+        particleCount: 60,
+        spread: 160,
+        origin: { y: 0 },
+        colors: CONFETTI_COLORS,
+        startVelocity: 25,
+        gravity: 1.2,
+        ticks: 400,
+        drift: 0,
+      });
+    }, 800);
 
-    const sizeBase = shapeIndex === 3 ? 5 : 4;
-    const w = sizeBase + seededValue(i, 2, shapeIndex <= 2 ? 5 : 4);
-    const h =
-      shapeIndex === 1
-        ? w * 2.5 // tall
-        : shapeIndex === 2
-          ? w * 0.4 // wide
-          : w;
+    // Final sparkle burst
+    setTimeout(() => {
+      confetti({
+        particleCount: 30,
+        spread: 360,
+        origin: { x: 0.5, y: 0.4 },
+        colors: ['#FBBF24', '#FCD34D', '#F1F5F9'],
+        startVelocity: 20,
+        gravity: 0.5,
+        ticks: 200,
+        scalar: 0.8,
+      });
+    }, 1400);
+  }, []);
 
-    return {
-      id: i,
-      x: seededValue(i, 1, 100),
-      color: CONFETTI_COLORS[i % CONFETTI_COLORS.length],
-      size: w,
-      height: h,
-      delay: isBurst
-        ? seededValue(i, 4, 0.6) // burst: 0–0.6s
-        : 0.8 + seededValue(i, 4, 1.4), // cascade: 0.8–2.2s
-      duration: 2.5 + seededValue(i, 5, 3.5),
-      rotation: extraRotation + 360 + seededValue(i, 6, 1080),
-      wobble: 15 + seededValue(i, 7, 50),
-      borderRadius,
-    };
-  });
-}
-
-function ConfettiParticles() {
-  const [particles] = useState(generateParticles);
-
-  return (
-    <div
-      className="absolute inset-0 overflow-hidden pointer-events-none"
-      aria-hidden="true"
-    >
-      {particles.map((p) => (
-        <div
-          key={p.id}
-          className="confetti-particle"
-          style={
-            {
-              '--confetti-x': `${p.x}%`,
-              '--confetti-color': p.color,
-              '--confetti-size': `${p.size}px`,
-              '--confetti-height': `${p.height}px`,
-              '--confetti-delay': `${p.delay}s`,
-              '--confetti-duration': `${p.duration}s`,
-              '--confetti-rotation': `${p.rotation}deg`,
-              '--confetti-wobble': `${p.wobble}px`,
-              borderRadius: p.borderRadius,
-            } as React.CSSProperties
-          }
-        />
-      ))}
-    </div>
-  );
+  useEffect(() => {
+    if (isVisible && isVictory) {
+      // Small delay so the overlay fades in first
+      const timer = setTimeout(fire, 300);
+      return () => clearTimeout(timer);
+    }
+  }, [isVisible, isVictory, fire]);
 }
 
 function TeamRow({
@@ -241,6 +242,7 @@ export function VictoryOverlay({
   opponentName,
 }: VictoryOverlayProps) {
   const { t } = useTranslation();
+  useVictoryConfetti(isVisible, isVictory);
   const hasTeams =
     myTeam && myTeam.length > 0 && opponentTeam && opponentTeam.length > 0;
 
@@ -261,8 +263,6 @@ export function VictoryOverlay({
           exit={{ opacity: 0, scale: 1.04 }}
           transition={{ duration: DURATION.slow, ease: EASE.snappy }}
         >
-          {isVictory && <ConfettiParticles />}
-
           {/* Title */}
           <motion.h1
             className={`victory-overlay__title text-[72px] max-sm:text-[48px] font-black uppercase tracking-wider leading-none ${
