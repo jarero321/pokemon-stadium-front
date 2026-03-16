@@ -23,8 +23,6 @@
 
 Soy Carlos, y este es el frontend de mi prueba tecnica para **Sr. Fullstack Developer**.
 
-Use **AI Agents (Claude Code)** como herramienta de desarrollo, lo que me permitio iterar rapido sin sacrificar calidad arquitectonica. Cada decision de UI, cada animacion, cada flujo de estado esta pensado y revisado por mi.
-
 ### Mi enfoque con el frontend
 
 La tentacion en una prueba tecnica es hacer algo "bonito" rapido y entregar. Yo hice lo contrario: **primero la arquitectura, despues la UI**.
@@ -43,7 +41,7 @@ Este es el detalle que separa un demo de un producto real. En un juego con WebSo
 
 La solucion: **todo el estado de la vista se deriva de los stores**. No hay navegacion imperativa. Cuando el socket se reconecta, el servidor manda `LOBBY_STATUS` con el estado completo, y el cliente se reconstruye solo. Si un `forcedSwitchPending` se pierde, se re-deriva del estado del equipo (Pokemon activo con HP 0 + alternativas vivas). Si `pendingAction` queda stuck, se limpia en disconnect.
 
-30 tests dedicados exclusivamente a probar escenarios de desync. Porque si no lo pruebas, no funciona.
+Hay tests dedicados a probar estos escenarios de desync: hot reload, disconnect del server, pending actions stuck, forced switch perdido, y batalla que termina mientras estas desconectado.
 
 ### Mas alla del spec
 
