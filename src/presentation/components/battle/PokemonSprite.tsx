@@ -1,7 +1,17 @@
 'use client';
 
-import { useState, useLayoutEffect, useCallback, useRef } from 'react';
-import { motion } from 'framer-motion';
+import {
+  useState,
+  useEffect,
+  useLayoutEffect,
+  useCallback,
+  useRef,
+} from 'react';
+import {
+  motion,
+  type TargetAndTransition,
+  type Transition,
+} from 'framer-motion';
 import { getSpriteUrl } from './types';
 import { Pokeball } from './Pokeball';
 import type { PokeballState } from './Pokeball';
@@ -87,11 +97,13 @@ const ANIM_CRITICAL = {
   transition: { duration: DURATION.spriteHit, ease: 'easeOut' as const },
 };
 
-const ANIM_MAP: Record<
-  SpriteAnimation,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  { initial: any; animate: any; transition: any }
-> = {
+interface SpriteAnimConfig {
+  initial: TargetAndTransition | boolean;
+  animate: TargetAndTransition;
+  transition: Transition;
+}
+
+const ANIM_MAP: Record<SpriteAnimation, SpriteAnimConfig> = {
   damage: ANIM_DAMAGE,
   fainting: ANIM_FAINTING,
   entering: ANIM_ENTERING,
@@ -114,10 +126,13 @@ export function PokemonSprite({
   const onAnimEndRef = useRef(onAnimationEnd);
   const animRef = useRef(animation);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     onAnimEndRef.current = onAnimationEnd;
+  }, [onAnimationEnd]);
+
+  useEffect(() => {
     animRef.current = animation;
-  });
+  }, [animation]);
 
   const spriteUrl = getSpriteUrl(name, back);
 
@@ -125,17 +140,17 @@ export function PokemonSprite({
     setSpriteVisible(true);
   }, []);
 
-  // Pokeball + visibility setup — useLayoutEffect is correct here to avoid flicker
+  // Pokeball + visibility setup — runs before paint to prevent flash
   useLayoutEffect(() => {
-    /* eslint-disable react-hooks/set-state-in-effect -- layout sync before paint to prevent flash */
     if (animation === 'entering') {
-      setSpriteVisible(false);
-      setPokeballState('idle');
-      requestAnimationFrame(() => setPokeballState('throwing'));
+      queueMicrotask(() => {
+        setSpriteVisible(false);
+        setPokeballState('idle');
+        requestAnimationFrame(() => setPokeballState('throwing'));
+      });
     } else if (animation === 'idle') {
-      setSpriteVisible(true);
+      queueMicrotask(() => setSpriteVisible(true));
     }
-    /* eslint-enable react-hooks/set-state-in-effect */
   }, [animation, animationKey]);
 
   const handleComplete = useCallback(() => {

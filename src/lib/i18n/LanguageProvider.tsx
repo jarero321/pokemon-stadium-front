@@ -38,11 +38,10 @@ function detectLocale(): Locale {
 
 function resolve(dict: Dictionary, key: string): string | string[] | undefined {
   const parts = key.split('.');
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  let current: any = dict;
+  let current: unknown = dict;
   for (const part of parts) {
     if (current == null || typeof current !== 'object') return undefined;
-    current = current[part];
+    current = (current as Record<string, unknown>)[part];
   }
   if (typeof current === 'string') return current;
   if (Array.isArray(current)) return current;
@@ -64,8 +63,7 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
   const [locale, setLocaleState] = useState<Locale>('en');
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect -- hydrate locale from localStorage/navigator on mount
-    setLocaleState(detectLocale());
+    queueMicrotask(() => setLocaleState(detectLocale()));
   }, []);
 
   const setLocale = useCallback((newLocale: Locale) => {

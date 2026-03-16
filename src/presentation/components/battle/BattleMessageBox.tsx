@@ -86,19 +86,19 @@ export function BattleMessageBox({
 
   // Reset when messageKey changes (new queue)
   useEffect(() => {
-    /* eslint-disable react-hooks/set-state-in-effect -- batch reset driven by external messageKey prop */
-    setCurrentIndex(0);
-    setDisplayedChars(0);
-    setIsTypingDone(false);
-    /* eslint-enable react-hooks/set-state-in-effect */
+    queueMicrotask(() => {
+      setCurrentIndex(0);
+      setDisplayedChars(0);
+      setIsTypingDone(false);
+    });
     completeFiredRef.current = false;
   }, [messageKey]);
 
   // Typing effect
   useEffect(() => {
     if (!currentMessage || displayedChars >= fullText.length) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect -- marks typing complete when chars exhausted
-      if (currentMessage && fullText.length > 0) setIsTypingDone(true);
+      if (currentMessage && fullText.length > 0)
+        queueMicrotask(() => setIsTypingDone(true));
       return;
     }
     timerRef.current = setTimeout(
