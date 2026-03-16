@@ -69,6 +69,7 @@ export function NicknameScreen() {
     const { token } = registerResult;
     storage.set(STORAGE_KEY, nick);
     storage.set(TOKEN_KEY, token);
+    storage.set('pokemon-stadium-token-ts', String(Date.now()));
     setNickname(nick);
     // Token already set during registration (handleRegister).
     // Socket connects via useSocket (triggered by token change).

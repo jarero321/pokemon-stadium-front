@@ -27,8 +27,11 @@ import type { IStorage } from '@/application/ports';
 const STORAGE_KEYS = {
   NICKNAME: 'pokemon-stadium-nickname',
   TOKEN: 'pokemon-stadium-token',
+  TOKEN_TS: 'pokemon-stadium-token-ts',
   BASE_URL: 'pokemon-stadium-base-url',
 };
+
+const TOKEN_MAX_AGE_MS = 12 * 60 * 60 * 1000; // 12 hours
 
 const IS_DEV = process.env.NODE_ENV === 'development';
 const PROD_API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8080';
@@ -94,6 +97,19 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
 
     const savedNickname = storage.get(STORAGE_KEYS.NICKNAME);
     const savedToken = storage.get(STORAGE_KEYS.TOKEN);
+
+    // Check if saved token is still fresh
+    const tokenTs = storage.get(STORAGE_KEYS.TOKEN_TS);
+    const isTokenExpired =
+      !tokenTs || Date.now() - Number(tokenTs) > TOKEN_MAX_AGE_MS;
+
+    if (isTokenExpired && savedToken) {
+      // Clean stale session
+      storage.remove(STORAGE_KEYS.NICKNAME);
+      storage.remove(STORAGE_KEYS.TOKEN);
+      storage.remove(STORAGE_KEYS.TOKEN_TS);
+      return;
+    }
 
     if (savedNickname) {
       setNickname(savedNickname);
