@@ -92,13 +92,14 @@ export function BattleScreen() {
   const handleSurrender = useCallback(() => {
     const opponentName = useLobbyStore.getState().getOpponent()?.nickname ?? '';
     const myName = useConnectionStore.getState().nickname ?? '';
-    // Show defeat screen locally before disconnecting
+    // Show defeat screen locally, then disconnect so server notifies opponent
     useBattleStore.getState().setBattleEnd({
       winner: opponentName,
       loser: myName,
       reason: 'surrender',
     });
-  }, []);
+    socketClient.disconnect();
+  }, [socketClient]);
 
   const animation = useBattleAnimation(
     lastTurn,
