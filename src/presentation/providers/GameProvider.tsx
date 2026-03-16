@@ -1,11 +1,23 @@
 'use client';
 
-import { createContext, useContext, useEffect, useMemo, useState } from 'react';
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { SocketIOClient } from '@/infrastructure/socket/SocketIOClient';
 import { FetchHttpClient } from '@/infrastructure/http/FetchHttpClient';
 import { LocalStorageClient } from '@/infrastructure/storage/LocalStorageClient';
 import { useConnectionStore, useLobbyStore } from '@/application/stores';
-import { useSocket, useNotifications } from '@/application/hooks';
+import {
+  useSocket,
+  useGameNotifications,
+  useRouteSync,
+} from '@/application/hooks';
+import { GameNotification } from '@/presentation/components/ui/GameNotification';
 import { ClientEvent } from '@/domain/events';
 import { ServerUrlScreen } from '@/presentation/components/ServerUrlScreen';
 import type { ISocketClient } from '@/application/ports';
@@ -94,15 +106,25 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
   const setMyNickname = useLobbyStore((s) => s.setMyNickname);
 
   // Auto-rejoin lobby when reconnecting with a saved nickname
+  const joiningRef = useRef(false);
+
   useEffect(() => {
-    if (status === 'connected' && nickname && !lobby) {
+    if (status === 'connected' && nickname && !lobby && !joiningRef.current) {
+      joiningRef.current = true;
       setMyNickname(nickname);
       socketClient.emit(ClientEvent.JOIN_LOBBY);
+    }
+
+    // Reset guard when lobby is set (join succeeded) or nickname cleared
+    if (lobby || !nickname) {
+      joiningRef.current = false;
     }
   }, [status, nickname, lobby, socketClient, setMyNickname]);
 
   useSocket(socketClient);
-  useNotifications();
+  const { messages: gameMessages, dismiss: dismissMessage } =
+    useGameNotifications();
+  useRouteSync();
 
   const value = useMemo(
     () => ({ socketClient, httpClient, storage }),
@@ -114,5 +136,10 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
     return <ServerUrlScreen onSubmit={handleUrlSubmit} />;
   }
 
-  return <GameContext.Provider value={value}>{children}</GameContext.Provider>;
+  return (
+    <GameContext.Provider value={value}>
+      {children}
+      <GameNotification messages={gameMessages} onDismiss={dismissMessage} />
+    </GameContext.Provider>
+  );
 }

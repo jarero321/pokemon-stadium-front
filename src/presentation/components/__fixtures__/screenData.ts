@@ -13,8 +13,6 @@ import type {
 import { LobbyStatus } from '@/domain/enums';
 import type { BattleEvent } from '@/application/stores';
 
-/* ── Pokemon ──────────────────────────────────────────── */
-
 const pokemon = (
   id: number,
   name: string,
@@ -103,8 +101,6 @@ export const MACHAMP = pokemon(
 export const PLAYER_TEAM: PokemonStateDTO[] = [CHARIZARD, GENGAR, DRAGONITE];
 export const OPPONENT_TEAM: PokemonStateDTO[] = [BLASTOISE, ALAKAZAM, MACHAMP];
 
-/* ── Players ──────────────────────────────────────────── */
-
 export const MY_PLAYER: PlayerDTO = {
   nickname: 'Ash',
   ready: false,
@@ -118,8 +114,6 @@ export const OPPONENT: PlayerDTO = {
   team: OPPONENT_TEAM,
   activePokemonIndex: 0,
 };
-
-/* ── Lobby States ─────────────────────────────────────── */
 
 export const LOBBY_WAITING: LobbyDTO = {
   status: LobbyStatus.WAITING,
@@ -159,8 +153,6 @@ export const LOBBY_BATTLING_OPPONENT_TURN: LobbyDTO = {
   winner: null,
 };
 
-/* ── Registration ─────────────────────────────────────── */
-
 export const NEW_PLAYER_RESULT: RegisterResponseDTO = {
   player: { nickname: 'Ash', wins: 0, losses: 0, totalBattles: 0, winRate: 0 },
   isNewPlayer: true,
@@ -179,8 +171,6 @@ export const RETURNING_PLAYER_RESULT: RegisterResponseDTO = {
   token: 'fake-token-returning',
 };
 
-/* ── Leaderboard ──────────────────────────────────────── */
-
 export const LEADERBOARD: PlayerStatsDTO[] = [
   { nickname: 'Red', wins: 42, losses: 5, totalBattles: 47, winRate: 0.894 },
   { nickname: 'Blue', wins: 38, losses: 10, totalBattles: 48, winRate: 0.792 },
@@ -194,8 +184,6 @@ export const LEADERBOARD: PlayerStatsDTO[] = [
   { nickname: 'Lance', wins: 28, losses: 15, totalBattles: 43, winRate: 0.651 },
   { nickname: 'Steven', wins: 22, losses: 18, totalBattles: 40, winRate: 0.55 },
 ];
-
-/* ── Battle Events ────────────────────────────────────── */
 
 export const BATTLE_EVENTS: BattleEvent[] = [
   {

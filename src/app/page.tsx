@@ -1,11 +1,24 @@
 'use client';
 
-import { GameRouter } from '@/presentation/components/GameRouter';
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { useCurrentView } from '@/application/stores';
+
+const VIEW_TO_ROUTE: Record<string, string> = {
+  nickname: '/register',
+  lobby: '/lobby',
+  ready: '/ready',
+  battle: '/battle',
+  result: '/result',
+};
 
 export default function Home() {
-  return (
-    <main className="min-h-screen">
-      <GameRouter />
-    </main>
-  );
+  const router = useRouter();
+  const currentView = useCurrentView();
+
+  useEffect(() => {
+    router.replace(VIEW_TO_ROUTE[currentView] ?? '/register');
+  }, [currentView, router]);
+
+  return null;
 }

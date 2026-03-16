@@ -19,7 +19,10 @@ export function useCurrentView(): GameView {
   if (finished) return 'result';
   if (started || lobby?.status === LobbyStatus.BATTLING) return 'battle';
   if (!nickname) return 'nickname';
-  if (lobby?.status === LobbyStatus.FINISHED) return 'result';
+  // Only show result if a battle actually happened (has winner)
+  if (lobby?.status === LobbyStatus.FINISHED && lobby.winner) return 'result';
+  // Lobby finished without battle (opponent left) → back to lobby for new match
+  if (lobby?.status === LobbyStatus.FINISHED) return 'lobby';
   if (!lobby) return 'lobby';
 
   const hasTeam = myPlayer?.team && myPlayer.team.length > 0;

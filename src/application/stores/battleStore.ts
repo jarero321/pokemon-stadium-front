@@ -18,9 +18,12 @@ interface BattleState {
   winner: string | null;
   events: BattleEvent[];
   lastTurn: TurnResultDTO | null;
+  lastSwitch: PokemonSwitchDTO | null;
   forcedSwitchPending: boolean;
+  animating: boolean;
 
   setBattleStarted: () => void;
+  setAnimating: (v: boolean) => void;
   addTurnResult: (turn: TurnResultDTO) => void;
   addPokemonDefeated: (
     data: PokemonDefeatedDTO,
@@ -39,13 +42,16 @@ const initialState = {
   winner: null,
   events: [] as BattleEvent[],
   lastTurn: null,
+  lastSwitch: null,
   forcedSwitchPending: false,
+  animating: false,
 };
 
 export const useBattleStore = create<BattleState>((set) => ({
   ...initialState,
 
   setBattleStarted: () => set({ started: true }),
+  setAnimating: (v) => set({ animating: v }),
 
   addTurnResult: (turn) =>
     set((state) => ({
@@ -61,6 +67,8 @@ export const useBattleStore = create<BattleState>((set) => ({
 
   addPokemonSwitch: (data) =>
     set((state) => ({
+      lastSwitch: data,
+      forcedSwitchPending: false,
       events: [...state.events, { type: 'pokemon_switch', data }],
     })),
 
