@@ -225,7 +225,7 @@
   height: 100%;
   width: var(--stat-pct, 50%);
   border-radius: 99px;
-  background: #2a3a5c;
+  background: #334770;
 }
 
 /* ── Type Badge (data-attribute selectors) ── */
@@ -401,11 +401,11 @@
 }
 
 .battle-action-btn:not(:disabled) {
-  background: var(--btn-color, #1e2940);
+  background: var(--btn-color, #243049);
 }
 
 .battle-action-btn:active:not(:disabled) {
-  background: var(--btn-color, #1e2940);
+  background: var(--btn-color, #243049);
 }
 
 /* ── Move Cell (pseudo-elements + state selectors) ── */

@@ -45,7 +45,7 @@ export function SwitchCard({
         onClick: () => canSelect && onClick?.(),
         disabled: !canSelect,
       })}
-      className={`flex flex-col gap-0.5 p-2 px-2.5 rounded-lg bg-[#0f1420] border-2 border-[#2a3a5c] transition-all duration-150 text-left
+      className={`flex flex-col gap-0.5 p-2 px-2.5 rounded-lg bg-[#111827] border-2 border-[#334770] transition-all duration-150 text-left
         ${readonly ? 'cursor-default' : 'cursor-pointer hover:enabled:bg-violet-500/[0.08] hover:enabled:border-violet-400/50 hover:enabled:translate-x-0.5 disabled:opacity-25 disabled:cursor-not-allowed'}
         ${isActive ? 'border-violet-400 bg-violet-500/[0.06]' : ''}
         ${pokemon.defeated ? 'border-rose-500/20' : ''}`}
@@ -53,7 +53,7 @@ export function SwitchCard({
       {children ?? (
         <>
           <span
-            className={`text-xs font-extrabold capitalize tracking-wide flex items-center gap-1.5 ${pokemon.defeated ? 'text-[#475569]' : 'text-[#e2e8f0]'}`}
+            className={`text-xs font-extrabold capitalize tracking-wide flex items-center gap-1.5 ${pokemon.defeated ? 'text-slate-500' : 'text-slate-100'}`}
           >
             {pokemon.name}
             {badge && (
@@ -70,7 +70,7 @@ export function SwitchCard({
               />
             </div>
             <span
-              className={`text-[10px] font-bold tabular-nums min-w-[42px] text-right ${pokemon.defeated ? 'text-rose-400/60' : 'text-[#475569]'}`}
+              className={`text-[10px] font-bold tabular-nums min-w-[42px] text-right ${pokemon.defeated ? 'text-rose-400/60' : 'text-slate-500'}`}
             >
               {pokemon.defeated ? 'FNT' : `${pokemon.hp}/${pokemon.maxHp}`}
             </span>

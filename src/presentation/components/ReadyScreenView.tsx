@@ -54,7 +54,7 @@ function PokemonCard({ pokemon }: { pokemon: PokemonStateDTO }) {
 
   return (
     <div
-      className={`flex items-center gap-3 rounded-lg border border-[#1e2940] bg-[#0f1420] p-2.5 transition-colors hover:bg-[#161d2e] ${typeBorderClass(pokemon.type)}`}
+      className={`flex items-center gap-3 rounded-lg border border-[#243049] bg-[#111827] p-2.5 transition-colors hover:bg-[#1a2236] ${typeBorderClass(pokemon.type)}`}
     >
       <div className="flex h-14 w-14 flex-shrink-0 items-center justify-center">
         <Image
@@ -68,7 +68,7 @@ function PokemonCard({ pokemon }: { pokemon: PokemonStateDTO }) {
         />
       </div>
       <div className="flex min-w-0 flex-1 flex-col gap-0.5">
-        <p className="truncate text-sm font-extrabold capitalize text-[#e2e8f0]">
+        <p className="truncate text-sm font-extrabold capitalize text-slate-100">
           {pokemon.name}
         </p>
         <div className="flex gap-1">
@@ -76,15 +76,15 @@ function PokemonCard({ pokemon }: { pokemon: PokemonStateDTO }) {
             <TypeBadge key={t} type={t} />
           ))}
         </div>
-        <div className="flex gap-2 text-[10px] font-bold uppercase tracking-wider text-[#475569]">
+        <div className="flex gap-2 text-[10px] font-bold uppercase tracking-wider text-slate-500">
           <span>
-            ATK <span className="text-[#94a3b8]">{pokemon.attack}</span>
+            ATK <span className="text-slate-400">{pokemon.attack}</span>
           </span>
           <span>
-            DEF <span className="text-[#94a3b8]">{pokemon.defense}</span>
+            DEF <span className="text-slate-400">{pokemon.defense}</span>
           </span>
           <span>
-            SPD <span className="text-[#94a3b8]">{pokemon.speed}</span>
+            SPD <span className="text-slate-400">{pokemon.speed}</span>
           </span>
         </div>
       </div>
@@ -112,7 +112,7 @@ export function ReadyScreenView({
         : t('ready.reviewTeam');
 
   return (
-    <div className="flex h-[100dvh] flex-col bg-[#080c14]">
+    <div className="flex h-[100dvh] flex-col bg-[#0a0f1e]">
       {/* Connection warning */}
       {status !== 'connected' && (
         <div className="px-4 pt-3">
@@ -154,11 +154,11 @@ export function ReadyScreenView({
 
           {/* VS divider */}
           <div className="flex items-center justify-center md:flex-col md:gap-2">
-            <div className="h-px flex-1 bg-[#1e2940] md:h-full md:w-px md:flex-none" />
-            <span className="mx-4 text-xl font-black uppercase tracking-widest text-violet-400 animate-pulse md:mx-0">
+            <div className="h-px flex-1 bg-[#243049] md:h-full md:w-px md:flex-none" />
+            <span className="mx-3 text-sm font-bold uppercase tracking-[0.2em] text-slate-500 md:mx-0">
               VS
             </span>
-            <div className="h-px flex-1 bg-[#1e2940] md:h-full md:w-px md:flex-none" />
+            <div className="h-px flex-1 bg-[#243049] md:h-full md:w-px md:flex-none" />
           </div>
 
           {/* Opponent team */}
@@ -187,7 +187,7 @@ export function ReadyScreenView({
       </div>
 
       {/* Sticky footer */}
-      <div className="border-t border-[#1e2940] bg-[#080c14]/95 backdrop-blur-md px-4 py-3 safe-bottom">
+      <div className="border-t border-[#243049] bg-[#0a0f1e]/95 backdrop-blur-md px-4 py-3 safe-bottom">
         <div className="mx-auto flex w-full max-w-3xl items-center gap-3">
           {countdown && (
             <CountdownRing

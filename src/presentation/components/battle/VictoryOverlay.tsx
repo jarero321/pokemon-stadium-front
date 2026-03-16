@@ -379,11 +379,11 @@ export function VictoryOverlay({
                 key={stat.label}
                 className="flex flex-col items-center gap-1"
               >
-                <span className="text-[10px] font-bold tracking-[0.12em] uppercase text-[#475569]">
+                <span className="text-[10px] font-bold tracking-[0.12em] uppercase text-slate-500">
                   {stat.label}
                 </span>
                 <span
-                  className={`victory-overlay__stat-value text-[28px] max-sm:text-[22px] font-black font-mono tabular-nums text-[#e2e8f0] ${
+                  className={`victory-overlay__stat-value text-[28px] max-sm:text-[22px] font-black font-mono tabular-nums text-slate-100 ${
                     isVictory
                       ? '[text-shadow:0_0_12px_rgba(250,204,21,0.25)]'
                       : ''

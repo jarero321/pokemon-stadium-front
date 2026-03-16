@@ -34,7 +34,7 @@ export function NicknameScreenView({
   const isConnected = status === 'connected';
 
   return (
-    <div className="flex min-h-screen items-center justify-center p-4 bg-[#080c14]">
+    <div className="flex min-h-screen items-center justify-center p-4 bg-[#0a0f1e]">
       <div className="flex w-full max-w-3xl flex-col gap-6 md:flex-row md:items-start">
         {/* Left: Registration */}
         <div className="flex-1">
@@ -71,7 +71,7 @@ export function NicknameScreenView({
                     maxLength={20}
                     className="glass-input"
                   />
-                  <p className="mt-2 text-xs text-[#475569]">
+                  <p className="mt-2 text-xs text-slate-500">
                     {t('nickname.charRules')}
                   </p>
                 </div>
@@ -139,7 +139,7 @@ export function NicknameScreenView({
                         </span>
                       </div>
                     </div>
-                    <p className="mt-3 text-center text-xs text-[#475569]">
+                    <p className="mt-3 text-center text-xs text-slate-500">
                       {t('nickname.totalBattles', {
                         count: registerResult.player.totalBattles,
                       })}
