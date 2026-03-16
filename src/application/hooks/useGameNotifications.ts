@@ -1,5 +1,4 @@
 'use client';
-/* eslint-disable react-hooks/set-state-in-effect */
 
 import { useState, useCallback, useEffect, useRef } from 'react';
 import { useConnectionStore, useLobbyStore } from '@/application/stores';
@@ -38,7 +37,7 @@ export function useGameNotifications() {
     prevStatusRef.current = status;
 
     if (prev === 'connecting' && status === 'connected') {
-      push(t('notifications.connected'), 'success');
+      queueMicrotask(() => push(t('notifications.connected'), 'success'));
     }
   }, [status, t, push]);
 
@@ -46,9 +45,11 @@ export function useGameNotifications() {
   useEffect(() => {
     if (!serverMessage) return;
     const severity = classifyError(serverMessage.code);
-    push(
-      serverMessage.message,
-      severity === ErrorSeverity.INFORMATIONAL ? 'info' : 'warning',
+    queueMicrotask(() =>
+      push(
+        serverMessage.message,
+        severity === ErrorSeverity.INFORMATIONAL ? 'info' : 'warning',
+      ),
     );
     useConnectionStore.getState().setServerMessage(null);
   }, [serverMessage, push]);
@@ -65,18 +66,22 @@ export function useGameNotifications() {
     if (prevCount < 2 && currCount === 2) {
       const opp = lobby.players.find((p) => p.nickname !== myNickname);
       if (opp)
-        push(
-          t('notifications.opponentJoined', { name: opp.nickname }),
-          'success',
+        queueMicrotask(() =>
+          push(
+            t('notifications.opponentJoined', { name: opp.nickname }),
+            'success',
+          ),
         );
     }
 
     const prevOpp = prev.players.find((p) => p.nickname !== myNickname);
     const currOpp = lobby.players.find((p) => p.nickname !== myNickname);
     if (prevOpp && currOpp && !prevOpp.ready && currOpp.ready) {
-      push(
-        t('notifications.opponentReady', { name: currOpp.nickname }),
-        'success',
+      queueMicrotask(() =>
+        push(
+          t('notifications.opponentReady', { name: currOpp.nickname }),
+          'success',
+        ),
       );
     }
   }, [lobby, myNickname, t, push]);

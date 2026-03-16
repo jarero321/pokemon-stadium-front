@@ -1,5 +1,4 @@
 'use client';
-/* eslint-disable react-hooks/refs */
 
 import { useEffect, useRef, useState, useCallback } from 'react';
 
@@ -19,7 +18,9 @@ export function useCountdown({
   const onExpireRef = useRef(onExpire);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  onExpireRef.current = onExpire;
+  useEffect(() => {
+    onExpireRef.current = onExpire;
+  });
 
   const start = useCallback(() => {
     setRemaining(seconds);

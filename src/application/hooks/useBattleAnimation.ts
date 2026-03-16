@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/set-state-in-effect, react-hooks/preserve-manual-memoization */
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { TurnResultDTO, PokemonSwitchDTO } from '@/domain/dtos';
 import type { SpriteAnimation } from '@/presentation/components/battle';
@@ -84,7 +83,7 @@ export function useBattleAnimation(
     afterMessagesRef.current = null;
     if (after) after();
     else setIsAnimating(false);
-  }, []);
+  }, [setIsAnimating]);
 
   // Process turn results with animation chaining
   useEffect(() => {
@@ -104,9 +103,7 @@ export function useBattleAnimation(
       ? opponentAnimNextRef
       : playerAnimNextRef;
 
-    setIsAnimating(true);
-
-    // Build messages
+    // Build messages (pure data — no setState)
     const msgs: BattleMessage[] = [
       {
         text: t('battle.attack', { name: lastTurn.attacker.pokemon }),
@@ -153,10 +150,7 @@ export function useBattleAnimation(
       }
     }
 
-    // Start attack animation chain: attacker lunges → defender takes damage → reset
-    bumpAttackerKey((k) => k + 1);
-    setAttackerAnim('attacking');
-
+    // Set up ref-based animation chain (no setState — refs are fine in effects)
     attackerNextRef.current = () => {
       setAttackerAnim('idle');
       bumpDefenderKey((k) => k + 1);
@@ -165,17 +159,13 @@ export function useBattleAnimation(
 
     defenderNextRef.current = () => {
       if (lastTurn.defeated) {
-        // Faint: bump key so it mounts fresh with fainting animation
         bumpDefenderKey((k) => k + 1);
         setDefenderAnim('fainting');
 
-        // Prevent onAnimationEnd from resetting to idle after faint plays
-        // The timeout below handles the post-faint state
         defenderNextRef.current = () => {
           /* no-op: timeout handles post-faint */
         };
 
-        // After faint animation completes
         faintTimerRef.current = setTimeout(
           () => {
             faintTimerRef.current = null;
@@ -184,8 +174,6 @@ export function useBattleAnimation(
               bumpDefenderKey((k) => k + 1);
               setDefenderAnim('entering');
             } else {
-              // No nextPokemon: mark animation done so BattleScreenView hides
-              // the defeated Pokemon (defeated + !isAnimating + anim still 'fainting')
               setIsAnimating(false);
             }
           },
@@ -196,14 +184,19 @@ export function useBattleAnimation(
       }
     };
 
-    // After messages are done, mark animation as complete
     afterMessagesRef.current = () => {
       setIsAnimating(false);
     };
 
-    setMessages(msgs);
-    setMessageKey((k) => k + 1);
-  }, [lastTurn, myNickname, t]);
+    // Defer all setState calls out of the synchronous effect body
+    queueMicrotask(() => {
+      setIsAnimating(true);
+      bumpAttackerKey((k) => k + 1);
+      setAttackerAnim('attacking');
+      setMessages(msgs);
+      setMessageKey((k) => k + 1);
+    });
+  }, [lastTurn, myNickname, t, setIsAnimating]);
 
   // Pokemon switch animation (entering)
   useEffect(() => {
@@ -216,26 +209,30 @@ export function useBattleAnimation(
     const setAnim = isMySwitch ? setPlayerAnim : setOpponentAnim;
     const bumpKey = isMySwitch ? setPlayerAnimKey : setOpponentAnimKey;
 
-    bumpKey((k) => k + 1);
-    setAnim('entering');
+    queueMicrotask(() => {
+      bumpKey((k) => k + 1);
+      setAnim('entering');
 
-    setMessages([
-      {
-        text: t('battle.switchedTo', {
-          player: lastSwitch.player,
-          pokemon: lastSwitch.newPokemon,
-        }),
-        type: 'info',
-      },
-    ]);
-    setMessageKey((k) => k + 1);
+      setMessages([
+        {
+          text: t('battle.switchedTo', {
+            player: lastSwitch.player,
+            pokemon: lastSwitch.newPokemon,
+          }),
+          type: 'info',
+        },
+      ]);
+      setMessageKey((k) => k + 1);
+    });
   }, [lastSwitch, myNickname, t]);
 
   // Not-your-turn feedback
   useEffect(() => {
     if (notYourTurnCount > prevNotYourTurnCount.current) {
-      setMessages([{ text: t('battle.notYourTurn'), type: 'info' }]);
-      setMessageKey((k) => k + 1);
+      queueMicrotask(() => {
+        setMessages([{ text: t('battle.notYourTurn'), type: 'info' }]);
+        setMessageKey((k) => k + 1);
+      });
     }
     prevNotYourTurnCount.current = notYourTurnCount;
   }, [notYourTurnCount, t]);
