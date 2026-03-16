@@ -116,7 +116,14 @@ export function useBattleAnimation(
         }),
         type: 'super-effective',
       });
-    } else if (lastTurn.typeMultiplier < 1 && lastTurn.typeMultiplier > 0) {
+    } else if (lastTurn.typeMultiplier === 0) {
+      msgs.push({
+        text: t('battle.immune', {
+          name: lastTurn.defender.pokemon,
+        }),
+        type: 'not-effective',
+      });
+    } else if (lastTurn.typeMultiplier < 1) {
       msgs.push({
         text: t('battle.notVeryEffective', {
           multiplier: lastTurn.typeMultiplier,

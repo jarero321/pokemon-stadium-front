@@ -89,6 +89,7 @@ export const es: Dictionary = {
     attack: '¡{{name}} usó un ataque!',
     superEffective: '¡Es súper efectivo! (x{{multiplier}})',
     notVeryEffective: 'No es muy efectivo... (x{{multiplier}})',
+    immune: 'Casi no afecta a {{name}}...',
     tookDamage: '¡{{name}} recibió {{damage}} de daño!',
     fainted: '¡{{name}} se debilitó!',
     switchedTo: '¡{{player}} cambió a {{pokemon}}!',
