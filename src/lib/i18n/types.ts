@@ -79,6 +79,7 @@ export interface Dictionary {
     attack: string;
     superEffective: string;
     notVeryEffective: string;
+    immune: string;
     tookDamage: string;
     fainted: string;
     switchedTo: string;
