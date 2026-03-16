@@ -23,7 +23,7 @@ const MSG_STYLES: Record<string, string> = {
   victory:
     'bg-gradient-to-r from-violet-400 to-violet-300 bg-clip-text text-transparent [text-shadow:none]',
   defeat: 'text-rose-400 [text-shadow:0_0_12px_rgba(251,113,133,0.4)]',
-  info: 'text-[#94a3b8]',
+  info: 'text-slate-400',
 };
 
 function IdleTips() {
@@ -45,9 +45,9 @@ function IdleTips() {
   }, [tips.length]);
 
   return (
-    <div className="p-4 px-5 min-h-[72px] sm:min-h-[64px] flex flex-col justify-center relative select-none bg-[#0f1420]">
+    <div className="p-4 px-5 min-h-[72px] sm:min-h-[64px] flex flex-col justify-center relative select-none bg-[#111827]">
       <p
-        className={`text-[13px] font-medium text-[#475569] leading-relaxed tracking-wide transition-opacity duration-300 ${
+        className={`text-[13px] font-medium text-slate-500 leading-relaxed tracking-wide transition-opacity duration-300 ${
           fade ? 'opacity-100' : 'opacity-0'
         }`}
       >
@@ -145,13 +145,13 @@ export function BattleMessageBox({
 
   return (
     <div
-      className="p-4 px-5 min-h-[72px] sm:min-h-[64px] flex flex-col justify-center relative cursor-pointer select-none bg-[#0f1420]"
+      className="p-4 px-5 min-h-[72px] sm:min-h-[64px] flex flex-col justify-center relative cursor-pointer select-none bg-[#111827]"
       role="log"
       aria-live="polite"
       onClick={handleClick}
     >
       <p
-        className={`text-[15px] font-semibold text-[#e2e8f0] leading-relaxed tracking-wide ${typeClass}`}
+        className={`text-[15px] font-semibold text-slate-100 leading-relaxed tracking-wide ${typeClass}`}
       >
         {fullText.slice(0, displayedChars)}
         {!isTypingDone && <span className="battle-msg-box__cursor" />}

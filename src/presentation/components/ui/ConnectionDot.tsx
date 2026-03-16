@@ -19,7 +19,7 @@ export function ConnectionDot({ status }: ConnectionDotProps) {
   const { t } = useTranslation();
 
   return (
-    <div className="flex items-center justify-center gap-2 text-xs text-[#94a3b8]">
+    <div className="flex items-center justify-center gap-2 text-xs text-slate-400">
       <span
         className={`inline-block h-2 w-2 rounded-full transition-colors duration-[var(--t-normal)] ${DOT_COLORS[status] ?? 'bg-[#475569]'}`}
       />

@@ -31,7 +31,7 @@ function MatchmakingSpinner() {
       />
       {/* Center pokeball */}
       <div className="absolute inset-0 flex items-center justify-center">
-        <div className="h-6 w-6 rounded-full border-2 border-[#2a3a5c] bg-[#0f1420]">
+        <div className="h-6 w-6 rounded-full border-2 border-[#334770] bg-[#111827]">
           <div className="h-1/2 rounded-t-full bg-rose-500/30" />
         </div>
       </div>
@@ -62,7 +62,7 @@ function StepIndicator({ steps }: { steps: MatchmakingStep[] }) {
                 ? 'bg-emerald-500/20 text-emerald-400'
                 : step.active
                   ? 'bg-violet-500/20 text-violet-400 animate-pulse'
-                  : 'bg-[#1e2940] text-[#475569]'
+                  : 'bg-[#1e2940] text-slate-500'
             }`}
           >
             {step.done ? '✓' : step.active ? '·' : i + 1}
@@ -72,8 +72,8 @@ function StepIndicator({ steps }: { steps: MatchmakingStep[] }) {
               step.done
                 ? 'text-emerald-400/80'
                 : step.active
-                  ? 'text-[#e2e8f0]'
-                  : 'text-[#475569]'
+                  ? 'text-slate-100'
+                  : 'text-slate-500'
             }`}
           >
             {step.label}
@@ -119,7 +119,7 @@ export function LobbyScreenView({
   ];
 
   return (
-    <div className="flex h-[100dvh] flex-col items-center justify-center p-4 bg-[#080c14]">
+    <div className="flex h-[100dvh] flex-col items-center justify-center p-4 bg-[#0a0f1e]">
       <div className="w-full max-w-sm space-y-8">
         {/* Connection warning */}
         {status !== 'connected' && (
@@ -176,7 +176,7 @@ export function LobbyScreenView({
         </div>
 
         {/* Progress steps */}
-        <div className="rounded-xl border border-[#1e2940] bg-[#0f1420] p-5">
+        <div className="rounded-xl border border-[#243049] bg-[#111827] p-5">
           <StepIndicator steps={steps} />
         </div>
 

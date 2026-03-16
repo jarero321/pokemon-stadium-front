@@ -28,7 +28,7 @@ export function ServerUrlScreen({ onSubmit }: ServerUrlScreenProps) {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center p-4 bg-[#080c14]">
+    <div className="flex min-h-screen items-center justify-center p-4 bg-[#0a0f1e]">
       <div className="w-full max-w-md">
         <div className="glass-panel rounded-2xl p-10">
           {/* Header */}
@@ -57,7 +57,7 @@ export function ServerUrlScreen({ onSubmit }: ServerUrlScreenProps) {
                 className="glass-input"
                 autoFocus
               />
-              <p className="mt-2 text-xs text-[#475569]">
+              <p className="mt-2 text-xs text-slate-500">
                 {t('serverUrl.hint')}
               </p>
             </div>

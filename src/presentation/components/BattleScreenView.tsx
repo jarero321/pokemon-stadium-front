@@ -114,13 +114,13 @@ export function BattleScreenView({
       />
 
       {/* HUD — sticky bottom like Pokemon games */}
-      <div className="border-t border-[#1e2940] bg-[#080c14]/95 backdrop-blur-md safe-bottom">
+      <div className="border-t border-[#243049] bg-[#0a0f1e]/95 backdrop-blur-md safe-bottom">
         {/* Turn bar */}
         <div
           className={`flex items-center gap-2 px-3 py-1.5 text-[10px] font-bold uppercase tracking-widest transition-colors ${
             isMyTurn && !isAnimating
               ? 'bg-violet-500/[0.06] text-violet-400/80'
-              : 'bg-[#080c14] text-[#475569]'
+              : 'bg-[#0a0f1e] text-slate-500'
           }`}
         >
           {turnTimer && (
@@ -147,7 +147,7 @@ export function BattleScreenView({
                 : t('battle.opponentTurn')}
           <button
             onClick={onSurrender}
-            className="ml-auto text-[9px] text-[#475569]/70 transition hover:text-rose-400/70"
+            className="ml-auto text-[9px] text-slate-500/70 transition hover:text-rose-400/70"
           >
             {t('battle.surrender')}
           </button>

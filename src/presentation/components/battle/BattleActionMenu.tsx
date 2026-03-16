@@ -81,7 +81,7 @@ export function BattleActionMenu({
         </div>
         <button
           onClick={() => setShowTeam(false)}
-          className="py-1.5 px-2.5 rounded-md text-[11px] font-extrabold text-[#475569] bg-[#0f1420] border border-[#1e2940] cursor-pointer transition-all duration-150 text-center uppercase tracking-wide mt-0.5 hover:bg-[#161d2e] hover:text-[#94a3b8] hover:border-[#2a3a5c]"
+          className="py-1.5 px-2.5 rounded-md text-[11px] font-extrabold text-slate-500 bg-[#111827] border border-[#243049] cursor-pointer transition-all duration-150 text-center uppercase tracking-wide mt-0.5 hover:bg-[#1a2236] hover:text-slate-400 hover:border-[#334770]"
         >
           {t('battle.back')}
         </button>

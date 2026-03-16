@@ -8,10 +8,13 @@ export function LanguageToggle() {
   return (
     <button
       onClick={() => setLocale(locale === 'en' ? 'es' : 'en')}
-      className="fixed bottom-4 right-4 z-[60] flex h-9 w-9 items-center justify-center rounded-full border border-white/10 bg-black/60 text-xs font-bold uppercase text-white/70 backdrop-blur-sm transition-all hover:border-white/25 hover:text-white"
+      className="fixed bottom-4 right-4 z-[60] flex items-center gap-1.5 rounded-full border border-slate-700/60 bg-slate-900/80 px-3 py-1.5 text-[11px] font-semibold tracking-wide text-slate-400 backdrop-blur-sm transition-all hover:border-slate-600 hover:text-slate-200"
       aria-label="Toggle language"
     >
-      {locale === 'en' ? 'ES' : 'EN'}
+      <span className="text-[13px] leading-none">
+        {locale === 'en' ? '🇲🇽' : '🇺🇸'}
+      </span>
+      {locale === 'en' ? 'Español' : 'English'}
     </button>
   );
 }
