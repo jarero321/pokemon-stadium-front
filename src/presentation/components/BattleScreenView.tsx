@@ -93,7 +93,7 @@ export function BattleScreenView({
   const isActionsDisabled = !isMyTurn || !!pendingAction || isAnimating;
 
   return (
-    <div className="flex h-[100dvh] flex-col">
+    <div className="flex h-[100dvh] flex-col overflow-hidden">
       {/* Connection warning */}
       {status !== 'connected' && (
         <div className="px-4 pt-2">

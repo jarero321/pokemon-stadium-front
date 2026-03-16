@@ -45,7 +45,7 @@ function IdleTips() {
   }, [tips.length]);
 
   return (
-    <div className="p-4 px-5 min-h-[88px] flex flex-col justify-center relative select-none bg-[#0f1420]">
+    <div className="p-4 px-5 min-h-[72px] sm:min-h-[64px] flex flex-col justify-center relative select-none bg-[#0f1420]">
       <p
         className={`text-[13px] font-medium text-[#475569] leading-relaxed tracking-wide transition-opacity duration-300 ${
           fade ? 'opacity-100' : 'opacity-0'
@@ -145,7 +145,7 @@ export function BattleMessageBox({
 
   return (
     <div
-      className="p-4 px-5 min-h-[88px] flex flex-col justify-center relative cursor-pointer select-none bg-[#0f1420]"
+      className="p-4 px-5 min-h-[72px] sm:min-h-[64px] flex flex-col justify-center relative cursor-pointer select-none bg-[#0f1420]"
       role="log"
       aria-live="polite"
       onClick={handleClick}
