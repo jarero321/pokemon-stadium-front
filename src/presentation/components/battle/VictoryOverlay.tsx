@@ -193,19 +193,21 @@ function TeamRow({
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: delay + i * 0.08, duration: 0.3 }}
           >
-            <Image
-              src={p.sprite}
-              alt={p.name}
-              width={48}
-              height={48}
-              unoptimized
-              className="pixelated"
-              style={
-                p.defeated
-                  ? { filter: 'grayscale(1) brightness(0.4)', opacity: 0.5 }
-                  : undefined
-              }
-            />
+            <div className="flex h-12 w-12 items-center justify-center">
+              <Image
+                src={p.sprite}
+                alt={p.name}
+                width={48}
+                height={48}
+                unoptimized
+                className="pixelated object-contain"
+                style={
+                  p.defeated
+                    ? { filter: 'grayscale(1) brightness(0.4)', opacity: 0.5 }
+                    : undefined
+                }
+              />
+            </div>
             <span
               className={`text-[9px] font-bold capitalize ${
                 p.defeated ? 'text-white/25' : 'text-white/60'
@@ -291,9 +293,11 @@ export function VictoryOverlay({
           >
             {reason === 'opponent_disconnected'
               ? t('result.disconnected')
-              : isVictory
-                ? t('result.champion', { name: winnerName })
-                : t('result.winsRound', { name: winnerName })}
+              : reason === 'surrender'
+                ? t('result.surrendered')
+                : isVictory
+                  ? t('result.champion', { name: winnerName })
+                  : t('result.winsRound', { name: winnerName })}
           </motion.p>
 
           {/* Teams or single Pokemon spotlight */}
@@ -328,19 +332,21 @@ export function VictoryOverlay({
               }}
             >
               {pokemonSprite && (
-                <Image
-                  src={pokemonSprite}
-                  alt={pokemonName ?? 'Pokemon'}
-                  width={128}
-                  height={128}
-                  unoptimized
-                  className="pixelated"
-                  style={
-                    isVictory
-                      ? undefined
-                      : { filter: 'grayscale(0.6) brightness(0.65)' }
-                  }
-                />
+                <div className="flex h-32 w-32 items-center justify-center">
+                  <Image
+                    src={pokemonSprite}
+                    alt={pokemonName ?? 'Pokemon'}
+                    width={128}
+                    height={128}
+                    unoptimized
+                    className="pixelated object-contain"
+                    style={
+                      isVictory
+                        ? undefined
+                        : { filter: 'grayscale(0.6) brightness(0.65)' }
+                    }
+                  />
+                </div>
               )}
               {pokemonName && (
                 <p className="text-base font-extrabold uppercase tracking-wide text-slate-100 [text-shadow:0_0_12px_rgba(255,255,255,0.20)]">
