@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import {
   useBattleStore,
   useLobbyStore,
@@ -9,13 +10,20 @@ import { useLeaveGame } from '@/application/hooks';
 import { useGame } from '@/presentation/providers/GameProvider';
 import { ResultScreenView } from './ResultScreenView';
 import type { TeamPokemon } from './battle/VictoryOverlay';
+import type { PlayerDTO } from '@/domain/dtos';
 
 export function ResultScreen() {
   const winner = useBattleStore((s) => s.winner);
   const events = useBattleStore((s) => s.events);
-  const myPlayer = useLobbyStore((s) => s.getMyPlayer());
-  const opponent = useLobbyStore((s) => s.getOpponent());
   const nickname = useConnectionStore((s) => s.nickname);
+
+  // Snapshot player data on mount — survives store resets from disconnect
+  const [myPlayer] = useState<PlayerDTO | null>(() =>
+    useLobbyStore.getState().getMyPlayer(),
+  );
+  const [opponent] = useState<PlayerDTO | null>(() =>
+    useLobbyStore.getState().getOpponent(),
+  );
   const resetBattle = useBattleStore((s) => s.reset);
   const clearLobby = useLobbyStore((s) => s.clearLobby);
   const { socketClient, httpClient, storage } = useGame();
