@@ -54,10 +54,10 @@ export function NicknameScreenView({
               <ConnectionDot status={status} />
             </div>
 
-            {/* Connection error */}
-            {connectionError && (
+            {/* Session or connection error */}
+            {(connectionError || formError) && (
               <div className="alert-banner alert-banner--error mb-4">
-                {connectionError}
+                {formError ?? connectionError}
               </div>
             )}
 
@@ -80,9 +80,7 @@ export function NicknameScreenView({
                 </div>
 
                 {formError && (
-                  <div className="alert-banner alert-banner--error">
-                    {formError}
-                  </div>
+                  <div className="text-sm text-rose-400">{formError}</div>
                 )}
 
                 <button
