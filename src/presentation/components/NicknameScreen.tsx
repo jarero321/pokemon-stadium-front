@@ -26,6 +26,7 @@ export function NicknameScreen() {
 
   const status = useConnectionStore((s) => s.status);
   const connectionError = useConnectionStore((s) => s.error);
+  const baseUrl = useConnectionStore((s) => s.baseUrl);
   const setNickname = useConnectionStore((s) => s.setNickname);
   const setToken = useConnectionStore((s) => s.setToken);
   const { httpClient, storage } = useGame();
@@ -52,7 +53,12 @@ export function NicknameScreen() {
 
       if (res.data) {
         setRegisterResult(res.data);
-        // Connect socket immediately so it's ready for join_lobby
+        // Clear any previous session before setting new token
+        storage.remove(STORAGE_KEY);
+        storage.remove(TOKEN_KEY);
+        useConnectionStore.getState().reset();
+        if (baseUrl) useConnectionStore.getState().setBaseUrl(baseUrl);
+        // Connect socket with new token
         setToken(res.data.token);
         httpClient.setToken(res.data.token);
       }
