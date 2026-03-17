@@ -134,6 +134,8 @@ export const es: Dictionary = {
     failedLoad: 'Error al cargar clasificación',
     noConnection: 'No se pudo conectar al servidor',
     registrationFailed: 'Error en el registro',
+    nicknameInUse:
+      'Este nickname está en una sala o batalla. Intenta con otro nombre.',
   },
   notifications: {
     connected: 'Conectado al servidor',

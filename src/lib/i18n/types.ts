@@ -118,6 +118,7 @@ export interface Dictionary {
     failedLoad: string;
     noConnection: string;
     registrationFailed: string;
+    nicknameInUse: string;
   };
   notifications: {
     connected: string;

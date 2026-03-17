@@ -134,6 +134,8 @@ export const en: Dictionary = {
     failedLoad: 'Failed to load leaderboard',
     noConnection: 'Could not connect to server',
     registrationFailed: 'Registration failed',
+    nicknameInUse:
+      'This nickname is currently in a lobby or battle. Try a different name.',
   },
   notifications: {
     connected: 'Connected to server',

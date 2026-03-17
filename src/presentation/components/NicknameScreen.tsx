@@ -47,7 +47,12 @@ export function NicknameScreen() {
       );
 
       if (!res.success) {
-        setError(res.error?.message ?? t('leaderboard.registrationFailed'));
+        const code = res.error?.code;
+        if (code === 'NICKNAME_IN_USE') {
+          setError(t('leaderboard.nicknameInUse'));
+        } else {
+          setError(res.error?.message ?? t('leaderboard.registrationFailed'));
+        }
         return;
       }
 
